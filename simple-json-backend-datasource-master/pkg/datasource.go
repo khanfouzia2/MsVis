@@ -39,6 +39,51 @@ type DataArr struct {
 	CallCount int64
 }
 
+//Struct to store api/datasource/Prometheus data
+type GetDatasourceId struct {
+	Id int64
+	OrgId int64
+	Name string
+	Type string
+	Access string
+	Url string
+	Password string
+	User string
+	BasicAuth bool
+	BasicAuthUser string
+	BasicAuthPassword string
+}
+
+//Struts to store Prometheus api data, json response
+//http://localhost:9090/api/v1/query?query=up
+
+type PrometheusApiData struct {
+	Status string
+	Data DataJson
+}
+
+type DataJson struct {
+	ResultType string
+	Result [] ResultArr
+}
+
+type ResultArr struct {
+	Metric MetricJson
+	Value [2]interface{} `json:"value"` 
+}
+
+type MetricJson struct {
+	Name string
+	Instance string
+	Job string
+}
+
+type ArrValues struct {
+  Number float64
+  Text string
+}
+
+
 type Message struct {
     Name string
     Body string
@@ -58,9 +103,6 @@ func (ds *JsonDatasource) Query(ctx context.Context, tsdbReq *datasource.Datasou
 	if err != nil {
 		return nil, err
 	}
-
-	pluginLogger.Debug("PRINTING QUERYTYPE")
-	pluginLogger.Debug(queryType)
 	
 	ds.logger.Debug("createRequest", "queryType", queryType)
 
@@ -86,37 +128,29 @@ func (ds *JsonDatasource) MetricQuery(ctx context.Context, tsdbReq *datasource.D
 	}
 	
 	// #My code starts#
-	pluginLogger.Debug("NOW PRINTING BODY OF MakeHttpRequest#######")
-	pluginLogger.Debug(string(body))
-	
-
-	pluginLogger.Debug("$$$$$$$$$$$ PRINTINT RESPONSE LETS SEE $$$$$$$$$$$")
+	performanceMetrics := getPrometheusData(ctx, ds)
+	pluginLogger.Debug(string(len(performanceMetrics)))
 	
 	//Storing body response in JsonResponse struct
 	var jsonResponse JsonResponse //keep this line
 	json.Unmarshal([]byte(body), &jsonResponse) //keep this line
 	
 	//Calling responsebodyWrapup function to convert json response to desired datasource table formatted response
-	result := responsebodyWrapup(jsonResponse)
+	result := responsebodyWrapup(jsonResponse, performanceMetrics)
 	body = []byte(result)
-
-	pluginLogger.Debug("@@@@@@@@@@PRINTING BYTE NOW@@@@@@@@@@@")
-	pluginLogger.Debug(string(body))
-	pluginLogger.Debug("$$$$$$$$$$$ ENDSSSSSSSSS $$$$$$$$$$$")
-	
 
 	return ds.ParseQueryResponse(remoteDsReq.queries, body)
 }
 
-func responsebodyWrapup (jsonResponse JsonResponse) string {
+func responsebodyWrapup (jsonResponse JsonResponse, performanceMetrics []string) string {
 
-	//var jsonResponse JsonResponse
-	//pluginLogger.Debug(jsonResponse.Data[1].Parent)
-	//pluginLogger.Debug(strconv.FormatInt(jsonResponse.Data[1].CallCount, 10))
-	
+	pluginLogger.Debug(string(strconv.FormatInt(time.Now().UTC().Unix(), 10)))
+	if len(performanceMetrics) < 1 {
+		pluginLogger.Debug("performanceMetrics length is zero in responsebodyWrapup function")
+	} else {
+		pluginLogger.Debug("No it is greater than 0")
+	}
 	jsonRes := `[{"columns":[],"values":[],"type":"table"}]`
-	pluginLogger.Debug("Length of jsonRes")
-	pluginLogger.Debug(strconv.Itoa(len(jsonResponse.Data)))
 	if len(jsonResponse.Data) > 0 {
 		pluginLogger.Debug("inside non zero if")
 		jsonSubRes := `{"columns":[{"text":"Parent","type":"string"},{"text":"Child","type":"string"},{"text":"CallCount","type":"number"}]`
@@ -126,14 +160,86 @@ func responsebodyWrapup (jsonResponse JsonResponse) string {
 		}
 		arrStr = arrStr[0:len(arrStr)-1]
 		jsonRes = `[` + jsonSubRes + `,"values":[` + arrStr + `]` + `,"type":"table"}` + `]`
-		pluginLogger.Debug("inside if")
-		pluginLogger.Debug(jsonRes)
 	} /*else {
 		pluginLogger.Debug("inside else")
 		jsonRes := `[{[], [],"type":"table"}]`
 	}*/
 	
 	return jsonRes
+}
+
+func getPrometheusData (ctx context.Context, ds *JsonDatasource) []string {
+	
+	data := RunPrometheusQuery("up")
+	var prometheusApiData PrometheusApiData
+	json.Unmarshal([]byte (data), &prometheusApiData)
+	pluginLogger.Debug("prometheusApi status")
+	pluginLogger.Debug(prometheusApiData.Status)
+	
+	var arr []string;
+
+	if (prometheusApiData.Status) == "success" {
+		pluginLogger.Debug("Inside Iff")
+		//var arr []string;
+		for i:=0; i < len (prometheusApiData.Data.Result); i++ {
+			pluginLogger.Debug("Inside for loop")
+			var sub_arr []string;
+			sub_arr = append(sub_arr, prometheusApiData.Data.Result[i].Metric.Job)
+			sub_arr = append(sub_arr, prometheusApiData.Data.Result[i].Value[1].(string))
+			arr = append(sub_arr)
+			pluginLogger.Debug(prometheusApiData.Data.Result[i].Metric.Job)
+			pluginLogger.Debug(prometheusApiData.Data.Result[i].Value[1].(string))
+		}
+		return arr
+	}
+	return arr
+}
+
+func RunPrometheusQuery (query string) []byte {
+
+	payload := simplejson.New()
+	
+	rbody, err := payload.MarshalJSON()
+	if err != nil {
+		return []byte(``)
+	}
+	
+	req, err := http.NewRequest(http.MethodGet, "http://localhost:3000/api/datasources/name/Prometheus", strings.NewReader(string(rbody)));
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer eyJrIjoiQXNmeGFPWmxJVGJuZDV3NHhCV0trYmZvN01ZVWZwdlQiLCJuIjoicHJvbWV0aGV1c0tleSIsImlkIjoxfQ==")
+	
+	
+	requestDump, err := httputil.DumpRequest(req, true)
+	pluginLogger.Debug("Request dump inside getPrometheusData function")
+	pluginLogger.Debug(string(requestDump))
+	
+	//body, err := ds.MakeHttpRequest(ctx, req)
+	client := &http.Client{}
+	response, err := client.Do(req)
+	if err != nil {
+		return []byte(``)
+	}
+	pluginLogger.Debug("### printing datasource http api response #######")
+	data, _ := ioutil.ReadAll(response.Body)
+	pluginLogger.Debug(string(data))
+	
+	var getDatasourceId GetDatasourceId
+	json.Unmarshal([]byte(data), &getDatasourceId)
+	pluginLogger.Debug(string(getDatasourceId.Id))
+	pluginLogger.Debug(getDatasourceId.Name)
+	pluginLogger.Debug(getDatasourceId.Url)
+	req, err = http.NewRequest(http.MethodGet, getDatasourceId.Url+"/api/v1/query?query="+query, strings.NewReader(string(rbody)));
+	client = &http.Client{}
+	response, err = client.Do(req)
+	if err != nil {
+		return []byte(``)
+	}
+	pluginLogger.Debug("### printing prometheus response #######")
+	data, _ = ioutil.ReadAll(response.Body)
+	pluginLogger.Debug(string(data))
+	
+	return data
+	
 }
 
 func (ds *JsonDatasource) CreateMetricRequest(tsdbReq *datasource.DatasourceRequest) (*RemoteDatasourceRequest, error) {
@@ -156,9 +262,15 @@ func (ds *JsonDatasource) CreateMetricRequest(tsdbReq *datasource.DatasourceRequ
 	//url := tsdbReq.Datasource.Url + "/query"
 	//url := "http://localhost:16686/api/dependencies?endTs=1582229223063&lookback=604800000"
 	url := tsdbReq.Datasource.Url + `/api/dependencies?endTs=` + strconv.FormatInt((time.Now().UnixNano() / (int64(time.Millisecond)/int64(time.Nanosecond))), 10) + `&lookback=604800000`
-	//printing url
-	pluginLogger.Debug("PRINTING URL from backend########")
+	pluginLogger.Debug("printing tsdbReq");
+
+	//res, err := http.NewRequest(http.MethodGet, "/api/datasources/Prometheus", strings.NewReader(string(rbody)));
+	//requestDump, err := httputil.DumpRequest(res, true)
+	//pluginLogger.Debug(string(requestDump))
+	//pluginLogger.Debug("PRINTING URL from backend########")
 	pluginLogger.Debug(url)
+	pluginLogger.Debug("Printed url above");
+	
 	//
 	
 	// below http.NewRequest line is the original line
@@ -182,11 +294,7 @@ func (ds *JsonDatasource) CreateMetricRequest(tsdbReq *datasource.DatasourceRequ
 	pluginLogger.Debug(string(requestDump))
 	//
 	
-	//printing remoteDsReq fields here
-	//pluginLogger.Debug(jsonQueries)
 
-	pluginLogger.Debug("PRINTING REMOTE DS REQUEST HERE:::::::::::::::::::")
-	//pluginLogger.Debug(req)
 	return &RemoteDatasourceRequest{
 		queryType: "query",
 		req:       req,
@@ -242,14 +350,14 @@ func (ds *JsonDatasource) MakeHttpRequest(ctx context.Context, remoteDsReq *Remo
 	//res, err := ctxhttp.Do(ctx, httpClient, remoteDsReq.req)
 	res, err := ctxhttp.Do(ctx, httpClient, remoteDsReq.req)
 	//below res, err is my line
-	pluginLogger.Debug("!!!!!!!!!!!TRYING TO PRINT httpClient")
+	//pluginLogger.Debug("!!!!!!!!!!!TRYING TO PRINT httpClient")
 	//trying to print something
 	// Save a copy of this request for debugging.
-		requestDump, err := httputil.DumpRequest(remoteDsReq.req, true)
+		//requestDump, err := httputil.DumpRequest(remoteDsReq.req, true)
 		if err != nil {
 		//pluginLogger.Debug(string(err))
 		}
-		pluginLogger.Debug(string(requestDump))
+		//pluginLogger.Debug(string(requestDump))
 	
 	//end try
 	//res, err = http.Get("http://localhost:16686/api/dependencies?endTs=1582229223063&lookback=604800000")
@@ -273,7 +381,7 @@ func (ds *JsonDatasource) MakeHttpRequest(ctx context.Context, remoteDsReq *Remo
 	if err != nil {
 		return nil, err
 	}
-	pluginLogger.Debug(string(body)) //working till here, produced the body response.........
+	//pluginLogger.Debug(string(body)) //working till here, produced the body response.........
 	return body, nil
 }
 
@@ -306,27 +414,20 @@ func parseJSONQueries(tsdbReq *datasource.DatasourceRequest) ([]*simplejson.Json
 func (ds *JsonDatasource) ParseQueryResponse(queries []*simplejson.Json, body []byte) (*datasource.DatasourceResponse, error) {
 	response := &datasource.DatasourceResponse{}
 	responseBody := []TargetResponseDTO{}
-	pluginLogger.Debug("INSIDE PARSE QUERY RESPONSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE11111")
-	pluginLogger.Debug(string(body))
+
 	err := json.Unmarshal(body, &responseBody)
 	if err != nil {
 		return nil, err
 	}
-	pluginLogger.Debug("INSIDE PARSE QUERY RESPONSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-	//pluginLogger.Debug(&responseBody.Columns[0])
-	//
-	//pluginLogger.Debug("@@@@@@ PRINTING responseBody from ParseQueryResponse method @@@@@@")
-	//pluginLogger.Debug(responseBody)
-	//
 	
 	for i, r := range responseBody {
 		refId := r.Target
-		pluginLogger.Debug(refId)
+		//pluginLogger.Debug(refId)
 	
 		if len(queries) > i {
 			refId = queries[i].Get("refId").MustString()
-			pluginLogger.Debug("@@@@@@ refId inside if clause")
-			pluginLogger.Debug(refId)
+			//pluginLogger.Debug("@@@@@@ refId inside if clause")
+			//pluginLogger.Debug(refId)
 		}
 
 		qr := datasource.QueryResult{
@@ -347,7 +448,7 @@ func (ds *JsonDatasource) ParseQueryResponse(queries []*simplejson.Json, body []
 				})
 			}
 
-			pluginLogger.Debug("OUTSIDE ROWS LOOP")
+			//pluginLogger.Debug("OUTSIDE ROWS LOOP")
 			for _, row := range r.Rows {
 				values := make([]*datasource.RowValue, 0)
 
