@@ -39,6 +39,9 @@ type DataArr struct {
 	CallCount int64
 }
 
+//Struts to store Prometheus api data, json response
+//http://localhost:9090/api/v1/query?query=up
+
 type Message struct {
     Name string
     Body string
@@ -156,9 +159,15 @@ func (ds *JsonDatasource) CreateMetricRequest(tsdbReq *datasource.DatasourceRequ
 	//url := tsdbReq.Datasource.Url + "/query"
 	//url := "http://localhost:16686/api/dependencies?endTs=1582229223063&lookback=604800000"
 	url := tsdbReq.Datasource.Url + `/api/dependencies?endTs=` + strconv.FormatInt((time.Now().UnixNano() / (int64(time.Millisecond)/int64(time.Nanosecond))), 10) + `&lookback=604800000`
+	pluginLogger.Debug("printing tsdbReq");
+	pluginLogger.Debug(tsdbReq)
+	res, err := http.NewRequest(http.MethodGet, "/api/datasources/Prometheus");
+	pluginLogger.Debug(res)
+	pluginLogger.Debug(err)
 	//printing url
 	pluginLogger.Debug("PRINTING URL from backend########")
 	pluginLogger.Debug(url)
+	
 	//
 	
 	// below http.NewRequest line is the original line

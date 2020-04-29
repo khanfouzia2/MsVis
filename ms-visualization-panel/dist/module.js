@@ -61206,17 +61206,18 @@ function (_super) {
 
   App.prototype.drawGraph = function () {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
-      var data, result, vis, container, nodes_, edges_, graphData, outputNetwork;
+      var data, result, vis, container, nodes_, edges_, prometheusDataResults, graphData, outputNetwork;
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         switch (_a.label) {
           case 0:
             data = this.props.data;
+            console.log(data.series);
             if (!(data.series.length < 1)) return [3
             /*break*/
             , 1];
-            return [2
-            /*return*/
-            , react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, "Data not available...")];
+            return [3
+            /*break*/
+            , 4];
 
           case 1:
             return [4
@@ -61227,12 +61228,20 @@ function (_super) {
             result = _a.sent();
             console.log(data);
             console.log("Result inside else block after calling the function");
-            console.log(result);
+            console.log(result); //result[0].length < 1
+
             vis = __webpack_require__(/*! ../node_modules/vis/dist/vis.js */ "./tool-frontend/node_modules/vis/dist/vis.js");
             container = document.getElementById("mynetwork");
             nodes_ = new vis.DataSet(result[0]);
             edges_ = new vis.DataSet(result[1]);
-            console.log("hhehehehhehehhehe22");
+            console.log(nodes_);
+            return [4
+            /*yield*/
+            , this.prometheusData()];
+
+          case 3:
+            prometheusDataResults = _a.sent();
+            console.log(prometheusDataResults);
             graphData = {
               nodes: nodes_,
               edges: edges_
@@ -61240,7 +61249,13 @@ function (_super) {
             console.log("graphData");
             console.log(graphData);
             outputNetwork = new vis.Network(container, graphData, result[2]);
-            console.log(outputNetwork);
+            console.log(outputNetwork); //this.prometheusData();
+
+            return [2
+            /*return*/
+            ];
+
+          case 4:
             return [2
             /*return*/
             ];
@@ -61249,12 +61264,63 @@ function (_super) {
     });
   };
 
+  App.prototype.prometheusData = function () {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+      var url, response, res_, arr, i;
+      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            console.log("Prometheus data --------------");
+            url = 'http://localhost:3000/api/datasources/proxy/80/api/v1/query_range?query=up&start=1586518560&end=1586540160&step=30';
+            return [4
+            /*yield*/
+            , fetch(url //"https://jsonplaceholder.typicode.com/todos"
+            )];
+
+          case 1:
+            response = _a.sent();
+            return [4
+            /*yield*/
+            , response.json()];
+
+          case 2:
+            res_ = _a.sent();
+            console.log(res_);
+            console.log(res_.data);
+            console.log(res_.data.result);
+            console.log(res_.data.result.length);
+            console.log(res_.data.result[0]);
+            console.log(res_.data.result[0].metric['job']); //returns name of the job
+
+            arr = [];
+
+            for (i = 0; i < res_.data.result.length; ++i) {
+              arr.push(res_.data.result[i].metric['job']);
+              console.log(res_.data.result[i].values[res_.data.result[i].values.length - 1][1]);
+            } //arr.push(res_.data.result[0].metric['job']);
+            //arr.push(res_.data.result[1].metric['job']);
+            //arr.push(res_.data.result[2].metric['job']);
+
+
+            console.log("###########");
+            return [2
+            /*return*/
+            , arr];
+        }
+      });
+    });
+  };
+  /*function delay(ms: number) {
+  return new Promise( resolve => setTimeout(resolve, ms) );
+  }*/
+
+
   App.prototype.componentDidMount = function () {
-    this.drawGraph();
+    this.drawGraph(); //this.prometheusData();
   };
 
   App.prototype.render = function () {
-    return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", null, "MS Visualization Graph"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", null, "Microservices Call Dependency Graph"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       id: "mynetwork",
       className: "Graph"
     }));
