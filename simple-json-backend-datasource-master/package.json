@@ -15,7 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/grafana/simple-json-backend-datasource.git"
   },
-  "author": "Fouzia Khan",
+  "author": "Grafana Labs",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/grafana/simple-json-backend-datasource/issues"

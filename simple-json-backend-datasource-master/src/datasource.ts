@@ -48,7 +48,8 @@ export class GenericDatasource {
   }
 
   query(options) {
-	//print query options
+	console.log("printing query options");
+	console.log(options);
     const query = this.buildQueryParameters(options);
     query.targets = query.targets.filter(t => !t.hide);
 

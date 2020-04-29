@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script src="https://d3js.org/d3.v3.js"></script>
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<style>
+
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+circle {
+  fill: white;
+  stroke: green;
+  stroke-width: 3px;
+  
+}
+
+circle_ {
+  fill: white;
+  stroke: red;
+  stroke-width: 3px;
+  
+}
+
+text {
+  fill: #000;
+  font: 12px sans-serif;
+  pointer-events: none;
+}
+
+</style>
+<body>
+<script>
+
+// get the data
+
+var dataset = {
+
+    nodes: [
+    {name: "frontend"},
+    {name: "customer"},
+    {name: "route"},
+    {name: "mysql"},
+    {name: "redis"},
+    {name: "driver"}
+    ],
+    links: [
+    {source: 5, target: 4, call: "0"},
+    {source: 1, target: 3, call: "1"},
+    {source: 0, target: 5, call: "3"},
+    {source: 0, target: 2, call: "9"},
+    {source: 0, target: 1, call: "14"}
+    ]
+};
+	
+var data = [
+    {value: 60, label: "issues", color: '#ff0000'},
+    {value: 70, label: "revenue", color: '#00ff00'},
+    {value: 30, label: "bugs", color: '#0000ff'},
+    {value: 80, label: "effort", color: '#ffcd15'}, //ffff00-yellow
+    //{value: 90, label: "label_5", color: '#ff0099'}
+];
+
+business_metrics = [["frontend",10,13,30,15,31,13,27],["customer",11,14,35,18,41,9,19],["route",21,24,45,58,41,19,99], ["mysql", 2, 4, 5, 2, 5, 2, 9], ["redis", 33, 19, 44, 66, 22, 77, 90], ["driver", 22, 23, 25, 26 ,26, 19, 50]]
+	
+d3.csv("force.csv", function(error, links) {
+
+/*var nodes = {};
+
+// Compute the distinct nodes from the links.
+links.forEach(function(link) {
+    link.source = nodes[link.source] || 
+        (nodes[link.source] = {name: link.source});
+    link.target = nodes[link.target] || 
+        (nodes[link.target] = {name: link.target});
+    link.value = +link.value;
+});*/
+
+var width = 960,
+    height = 500;
+
+var force = d3.layout.force()
+    .nodes(d3.values(dataset.nodes))
+    .links(dataset.links)
+    .size([width, height])
+    .linkDistance(150)
+    .charge(-500)
+    .on("tick", tick)
+    .start();
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+// build the arrow.
+svg.append("svg:defs").selectAll("marker")
+    .data(["end"])      // Different link/path types can be defined here
+  .enter().append("svg:marker")    // This section adds in the arrows
+    .attr("id", String)
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 32)
+    .attr("refY", -4.5)
+    .attr("markerWidth", 9)
+    .attr("markerHeight", 7)
+    .attr("orient", "auto")
+  .append("svg:path")
+    .attr("d", "M0,-5L10,0L0,5");
+
+// add the links and the arrows
+var path = svg.append("svg:g").selectAll("path")
+    .data(dataset.links)
+  .enter().append("svg:path")
+    .attr("class", function(d) { return "link " + d.type; }) //???
+    .attr("class", "link")
+    .attr("marker-end", "url(#end)");
+
+// define the nodes
+var node = svg.selectAll(".node")
+    .data(dataset.nodes)
+  .enter().append("g")
+    .attr("class", "node")
+    .call(force.drag);
+
+//node.append("arc").attr("d", arc({startAngle:0, endAngle:(Math.PI/2)}))
+
+var svg = d3.select("svg")
+.append("g")
+.attr("transform", "translate(150,75)");
+
+var arc = d3.svg.arc()
+  .innerRadius(20)
+  .outerRadius(20);
+  
+var arc2 = d3.svg.arc()
+  .innerRadius(15)
+  .outerRadius(15);
+  
+node.append("circle").attr("r", 25)
+node.append("path")
+  .attr("fill", "none")
+  .attr("stroke-width", 3)
+  .attr("stroke", "red")
+  .attr("d", arc2({startAngle:(function(d) { return d.name; }), endAngle:(Math.PI)}))
+/*node.append("path")
+  .attr("fill", "none")
+  .attr("stroke-width", 3)
+  .attr("stroke", "gray")
+  .attr("d", arc2({startAngle:(Math.PI), endAngle:(Math.PI)*2}))*/
+node.append("path")
+  .attr("fill", "none")
+  .attr("stroke-width", 3)
+  .attr("stroke", "blue")
+  .attr("d", arc({startAngle:0, endAngle:(Math.PI*1.5)}))
+/*node.append("path")
+  .attr("fill", "none")
+  .attr("stroke-width", 3)
+  .attr("stroke", "gray")
+  .attr("d", arc({startAngle:(Math.PI*1.5), endAngle:(Math.PI*2)}))*/
+
+
+  
+console.log(computeNode()[0]);
+computeNode();
+//node.append(computeNode()).attr("width", 100).attr("height", 100)
+	
+// add the text 
+node.append("text")
+    .attr("x", 12)
+    .attr("dy", ".35em")
+    .text(function(d) { return d.name; });
+	
+path.append("textPath")
+	.attr("y", 20)
+	.text(function(d) { return d.call; });
+
+
+	
+// add the curvy lines
+function tick() {
+    path.attr("d", function(d) {
+        var dx = d.target.x - d.source.x,
+            dy = d.target.y - d.source.y,
+            dr = Math.sqrt(dx * dx + dy * dy);
+        return "M" + 
+            d.source.x + "," + 
+            d.source.y + "A" + 
+            dr + "," + dr + " 0 0,1 " + 
+            d.target.x + "," + 
+            d.target.y;
+    });
+	
+
+    node
+        .attr("transform", function(d) { 
+  	    return "translate(" + d.x + "," + d.y + ")"; });
+}
+
+
+
+// action to take on mouse click
+/*function click() {
+    d3.select(this).select("text").transition()
+        .duration(750)
+        .attr("x", 22)
+        .style("fill", "steelblue")
+        .style("stroke", "lightsteelblue")
+        .style("stroke-width", ".5px")
+        .style("font", "20px sans-serif");
+    d3.select(this).select("circle").transition()
+        .duration(750)
+        .attr("r", 16)
+        .style("fill", "lightsteelblue");
+}*/
+
+// action to take on mouse double click
+/*function dblclick() {
+    d3.select(this).select("circle").transition()
+        .duration(750)
+        .attr("r", 6)
+        .style("fill", "#ccc");
+    d3.select(this).select("text").transition()
+        .duration(750)
+        .attr("x", 12)
+        .style("stroke", "none")
+        .style("fill", "black")
+        .style("stroke", "none")
+        .style("font", "10px sans-serif");
+}*/
+
+//Guage graph
+
+
+//sql response
+//{"results":{"A":{"refId":"A","meta":{"rowCount":3,"sql":"SELECT * from metrics;"},"series":null,"tables":[{"columns":[{"text":"service_name"},{"text":"effort"},{"text":"cost"},{"text":"revenue"},{"text":"open_issues_count"},{"text":"closed_issues_count"},{"text":"open_bugs_count"},{"text":"closed_bugs_count"}],"rows":[["customer",10,13,30,15,31,13,27],["route",11,14,35,18,41,9,19],["frontend",21,24,45,58,41,19,99]]}],"dataframes":null}}}
+});
+
+</script>
+</body>
+<div id="result"></div>
+</html>
