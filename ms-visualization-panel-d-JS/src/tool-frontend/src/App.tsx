@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 //import React, { Component } from 'react';
 import { SimpleOptions } from 'types';
-import './style/App.css';
+//import './style/App.css';
+//import './App.css';
 import { PanelProps } from '@grafana/data';
-import { getNetworkData } from './FormNetwork';
+//import { getNetworkData } from './FormNetwork';
 
 //import axios from 'axios';
 
@@ -17,13 +18,11 @@ export class App extends PureComponent<Props> {
 		super(props);
 	}
 	
-	async drawGraph(){
+	/*async drawGraph(){
 		const { data } = this.props;
 		console.log(data.series);
 		if (data.series.length < 1) {
-			//document.getElementById('mynetwork').innerHTML = 'No data to show';
-			//var myElement = document.getElementById('my-id')!;
-			//myElement = "No data to show";
+
 		}
 		else {
 			const metrics_data = await this.getPrometheusMetrics();
@@ -32,11 +31,10 @@ export class App extends PureComponent<Props> {
 			console.log(metrics_data.length);
 			
 			const result = await getNetworkData(data.series, metrics_data);
-			//console.log(data)
+
 			console.log("Result from getNetworkData function");
 			console.log(result); //result[0].length < 1
 			
-			//if (result[0].length <1){} else {}
 			var vis = require('../node_modules/vis/dist/vis.js');
 			var container = document.getElementById("mynetwork");
 			const nodes_ = new vis.DataSet(result[0]);
@@ -60,6 +58,182 @@ export class App extends PureComponent<Props> {
 			//this.prometheusData();
 			return;
 		}
+	}*/
+	
+	async drawGraph(){
+		var dataset = {
+
+			nodes: [
+			{name1: "frontend", effort: 1, open_issues: 20, closed_issues: 30, open_bugs: 50, closed_bugs: 69, cost: 5000, revenue: 9800},
+			{name1: "customer", effort: 1.5, open_issues: 90, closed_issues: 33, open_bugs: 10, closed_bugs: 49, cost: 4000, revenue: 6000},
+			{name1: "route", effort: 1.25, open_issues: 70, closed_issues: 20, open_bugs: 40, closed_bugs: 33, cost: 9900, revenue: 50000},
+			{name1: "mysql", effort: 1.75, open_issues: 20, closed_issues: 30, open_bugs: 60, closed_bugs: 12, cost: 700, revenue: 55000},
+			{name1: "redis", effort: 2, open_issues: 10, closed_issues: 70, open_bugs: 70, closed_bugs: 66, cost: 400, revenue: 2000},
+			{name1: "driver", effort: 0.75, open_issues: 50, closed_issues: 60, open_bugs: 80, closed_bugs: 44, cost: 6600, revenue: 1000}
+			],
+			links: [
+			{source: 5, target: 4, call: "0"},
+			{source: 1, target: 3, call: "1"},
+			{source: 0, target: 5, call: "3"},
+			{source: 0, target: 2, call: "9"},
+			{source: 0, target: 1, call: "14"}
+			]
+		};
+			
+		/*var data = [
+			{value: 60, label: "issues", color: '#ff0000'},
+			{value: 70, label: "revenue", color: '#00ff00'},
+			{value: 30, label: "bugs", color: '#0000ff'},
+			{value: 80, label: "effort", color: '#ffcd15'}, //ffff00-yellow
+			//{value: 90, label: "label_5", color: '#ff0099'}
+		];*/
+
+		//var business_metrics = [["frontend",10,13,30,15,31,13,27],["customer",11,14,35,18,41,9,19],["route",21,24,45,58,41,19,99], ["mysql", 2, 4, 5, 2, 5, 2, 9], ["redis", 33, 19, 44, 66, 22, 77, 90], ["driver", 22, 23, 25, 26 ,26, 19, 50]];
+
+		//d3.csv("force.csv", function(error, links) {
+
+		var width = 1000,
+			height = 900;
+
+		var d3 = require('../d3js_modules/d3.v3.min.js');
+		//const s = require('./App.css');
+		
+		var force = d3.layout.force()
+			.nodes(d3.values(dataset.nodes))
+			.links(dataset.links)
+			.size([width, height])
+			.linkDistance(170)
+			.charge(-900)
+			.on("tick", tick)
+			.start();
+		/*var simulation = d3.forceSimulation(dataset.nodes)
+			.force("charge", d3.forceManyBody(-900))
+			.force("link", d3.forceLink(datasetlinks))
+			.force("center", d3.forceCenter());*/
+
+		var svg = d3.select("#mynetwork").append("svg")
+			.attr("width", width)
+			.attr("height", height);
+
+		// build the arrow.
+		svg.append("svg:defs").selectAll("marker")
+			.data(["end"])      // Different link/path types can be defined here
+		  .enter().append("svg:marker")    // This section adds in the arrows
+			.attr("id", String)
+			.attr("viewBox", "0 -5 10 10")
+			.attr("refX", 40)
+			.attr("refY", -4.5)
+			.attr("markerWidth", 9)
+			.attr("markerHeight", 7)
+			.attr("orient", "auto")
+		  .append("svg:path")
+			.attr("d", "M0,-5L10,0L0,5");
+
+		// add the links and the arrows
+		var path = svg.append("svg:g").selectAll("path")
+			.data(dataset.links)
+		  .enter().append("svg:path")
+			//.attr("class", function(d:any) { return "link " + d.type; }) //???
+			//.attr("class", "link")
+			.style("fill", "none")
+			.style("stroke", "#666")
+			.style("stroke-width", "1.5px")
+			.attr("marker-end", "url(#end)");
+
+		// define the nodes
+		var node = svg.selectAll(".node")
+			.data(dataset.nodes)
+		  .enter().append("g")
+			.attr("class", "node")
+			.call(force.drag);
+
+		//node.append("arc").attr("d", arc({startAngle:0, endAngle:(Math.PI/2)}))
+
+		var svg = d3.select("svg")
+		.append("g")
+		.attr("transform", "translate(150,75)");
+
+		var arc = d3.svg.arc()
+		  .innerRadius(25)
+		  .outerRadius(25);
+		  
+		var arc2 = d3.svg.arc()
+		  .innerRadius(20)
+		  .outerRadius(20);
+		  
+		var arc3 = d3.svg.arc()
+		  .innerRadius(15)
+		  .outerRadius(15);
+		  
+		var arc4 = d3.svg.arc()
+		  .innerRadius(35)
+		  .outerRadius(35);
+		  
+		node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white")
+		node.append("path")
+		  .attr("fill", "none")
+		  .attr("stroke-width", 3)
+		  .attr("stroke", "#CCCC00")
+		  .attr("d", (function(d:any,i:any) { return arc3({startAngle:0, endAngle:(Math.PI)*d.effort}); }))
+		  
+		node.append("path")
+		  .attr("fill", "none")
+		  .attr("stroke-width", 3)
+		  .attr("stroke", "red")
+		  .attr("d", (function(d:any,i:any) { return arc2({startAngle:0, endAngle:(Math.PI)*d.effort}); }))
+
+
+		node.append("path")
+		  .attr("fill", "none")
+		  .attr("stroke-width", 3)
+		  .attr("stroke", "brown")
+		  .attr("d", (function(d:any,i:any) { return arc4({startAngle:0, endAngle:(Math.PI)*d.effort}); }))
+
+		node.append("path")
+		  .attr("fill", "none")
+		  .attr("stroke-width", 3)
+		  .attr("stroke", "blue")
+		  .attr("d", (function(d:any,i:any) { return arc({startAngle:0, endAngle:(Math.PI)*d.effort}); }))
+
+		// add the text
+		node.append("text")
+			  .text(function(d:any) {
+				return d.name1+" "+d.cost+"/ms"+" "+d.effort+"/m";
+			  })
+			  .attr('x', 10)
+			  .attr('y', 3);
+			  
+		path.append("text")
+				.text(function(d:any) {
+				return d.open_issues;
+			  })
+			  .attr('x', 10)
+			  .attr('y', 3);
+
+		/*node.append("title")
+			  .text(function(d) { return d.name+d.revenue; });*/
+	
+		// add the curvy lines
+		function tick() {
+			path.attr("d", function(d:any) {
+				var dx = d.target.x - d.source.x,
+					dy = d.target.y - d.source.y,
+					dr = Math.sqrt(dx * dx + dy * dy);
+				return "M" + 
+					d.source.x + "," + 
+					d.source.y + "A" + 
+					dr + "," + dr + " 0 0,1 " + 
+					d.target.x + "," + 
+					d.target.y;
+			});
+			
+
+			node
+				.attr("transform", function(d:any) { 
+				return "translate(" + d.x + "," + d.y + ")"; });
+		}
+
+		//});
 	}
 	
 	
@@ -162,7 +336,6 @@ export class App extends PureComponent<Props> {
       <div>
 		<p>Microservices Call Dependency Graph</p>
 		<div id = "mynetwork" className="Graph"></div>
-
       </div>
     );
   }

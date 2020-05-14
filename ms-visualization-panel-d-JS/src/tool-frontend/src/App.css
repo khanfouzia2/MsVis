@@ -42,3 +42,29 @@
 	width: 900px;
 	height: 600px;
 }
+
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+circle {
+  fill: white;
+  stroke: green;
+  stroke-width: 3px;
+  
+}
+
+circle_ {
+  fill: white;
+  stroke: red;
+  stroke-width: 3px;
+  
+}
+
+text {
+  fill: #000;
+  font: 12px sans-serif;
+  pointer-events: none;
+}
