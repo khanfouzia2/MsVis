@@ -4,7 +4,7 @@ import { SimpleOptions } from 'types';
 //import './style/App.css';
 //import './App.css';
 import { PanelProps } from '@grafana/data';
-import { getNetworkData } from './FormNetwork';
+//import { getNetworkData } from './FormNetwork';
 
 //import axios from 'axios';
 
@@ -18,36 +18,32 @@ export class App extends PureComponent<Props> {
 		super(props);
 	}
 	
-	async mergeMetricsData(){
+	/*async drawGraph(){
 		const { data } = this.props;
 		console.log(data.series);
 		if (data.series.length < 1) {
 
 		}
 		else {
-			const prometheus_metrics = await this.getPrometheusMetrics();
-			console.log("Prometheus metrics_data inside drawGraph");
-			console.log(prometheus_metrics);
-			console.log(prometheus_metrics.length);
+			const metrics_data = await this.getPrometheusMetrics();
+			console.log("metrics_data inside drawGraph");
+			console.log(metrics_data);
+			console.log(metrics_data.length);
 			
-			const business_metrics = await this.sortSQLData();
-			console.log("Printing SQLData inside draw graph after prometheus metrics");
-			console.log(business_metrics);
-			
-			const result = await getNetworkData(data.series, prometheus_metrics, business_metrics);
+			const result = await getNetworkData(data.series, metrics_data);
 
 			console.log("Result from getNetworkData function");
 			console.log(result); //result[0].length < 1
 			
-			if (result.length > 0)
-				this.drawGraph(result);
-			else 
-				return;
-			/*var vis = require('../node_modules/vis/dist/vis.js');
+			var vis = require('../node_modules/vis/dist/vis.js');
 			var container = document.getElementById("mynetwork");
 			const nodes_ = new vis.DataSet(result[0]);
 			const edges_ = new vis.DataSet(result[1]);
 			console.log(nodes_);
+			//var prometheusDataResults = await this.prometheusData();
+			//console.log(prometheusDataResults);
+			//var nodes = new vis.DataSet([]);
+			//var edges = new vis.DataSet([]);
 			
 			var graphData = {
 				nodes: nodes_,
@@ -60,12 +56,12 @@ export class App extends PureComponent<Props> {
 				console.log(outputNetwork);
 			}
 			//this.prometheusData();
-			return;*/
+			return;
 		}
-	}
+	}*/
 	
-	async drawGraph(metrics_data:any[]){
-		/*var dataset = {
+	async drawGraph(){
+		var dataset = {
 
 			nodes: [
 			{name1: "frontend", effort: 1, open_issues: 20, closed_issues: 30, open_bugs: 50, closed_bugs: 69, cost: 5000, revenue: 9800},
@@ -82,10 +78,15 @@ export class App extends PureComponent<Props> {
 			{source: 0, target: 2, call: "9"},
 			{source: 0, target: 1, call: "14"}
 			]
-		};*/
-		
-		var dataset = {nodes: metrics_data[0], links: metrics_data[1]};
+		};
 			
+		/*var data = [
+			{value: 60, label: "issues", color: '#ff0000'},
+			{value: 70, label: "revenue", color: '#00ff00'},
+			{value: 30, label: "bugs", color: '#0000ff'},
+			{value: 80, label: "effort", color: '#ffcd15'}, //ffff00-yellow
+			//{value: 90, label: "label_5", color: '#ff0099'}
+		];*/
 
 		//var business_metrics = [["frontend",10,13,30,15,31,13,27],["customer",11,14,35,18,41,9,19],["route",21,24,45,58,41,19,99], ["mysql", 2, 4, 5, 2, 5, 2, 9], ["redis", 33, 19, 44, 66, 22, 77, 90], ["driver", 22, 23, 25, 26 ,26, 19, 50]];
 
@@ -105,7 +106,10 @@ export class App extends PureComponent<Props> {
 			.charge(-900)
 			.on("tick", tick)
 			.start();
-
+		/*var simulation = d3.forceSimulation(dataset.nodes)
+			.force("charge", d3.forceManyBody(-900))
+			.force("link", d3.forceLink(datasetlinks))
+			.force("center", d3.forceCenter());*/
 
 		var svg = d3.select("#mynetwork").append("svg")
 			.attr("width", width)
@@ -170,44 +174,44 @@ export class App extends PureComponent<Props> {
 		  .attr("fill", "none")
 		  .attr("stroke-width", 3)
 		  .attr("stroke", "#CCCC00")
-		  .attr("d", (function(d:any,i:any) { return arc3({startAngle:0, endAngle:(Math.PI)*d.effort_spent}); }))
+		  .attr("d", (function(d:any,i:any) { return arc3({startAngle:0, endAngle:(Math.PI)*d.effort}); }))
 		  
 		node.append("path")
 		  .attr("fill", "none")
 		  .attr("stroke-width", 3)
 		  .attr("stroke", "red")
-		  .attr("d", (function(d:any,i:any) { return arc2({startAngle:0, endAngle:(Math.PI)*d.open_to_closed_bugs}); }))
+		  .attr("d", (function(d:any,i:any) { return arc2({startAngle:0, endAngle:(Math.PI)*d.effort}); }))
 
 
 		node.append("path")
 		  .attr("fill", "none")
 		  .attr("stroke-width", 3)
 		  .attr("stroke", "brown")
-		  .attr("d", (function(d:any,i:any) { return arc4({startAngle:0, endAngle:(Math.PI)*d.cost_to_revenue}); }))
+		  .attr("d", (function(d:any,i:any) { return arc4({startAngle:0, endAngle:(Math.PI)*d.effort}); }))
 
 		node.append("path")
 		  .attr("fill", "none")
 		  .attr("stroke-width", 3)
 		  .attr("stroke", "blue")
-		  .attr("d", (function(d:any,i:any) { return arc({startAngle:0, endAngle:(Math.PI)*d.open_to_closed_issues}); }))
+		  .attr("d", (function(d:any,i:any) { return arc({startAngle:0, endAngle:(Math.PI)*d.effort}); }))
 
 		// add the text
 		node.append("text")
 			  .text(function(d:any) {
-				return d.name+" "+d.service_response_time+"/ms"+" "+d.service_load_1m+"/m";
+				return d.name1+" "+d.cost+"/ms"+" "+d.effort+"/m";
 			  })
 			  .attr('x', 10)
 			  .attr('y', 3);
 			  
 		path.append("text")
 				.text(function(d:any) {
-				return d.calls;
+				return d.open_issues;
 			  })
 			  .attr('x', 10)
 			  .attr('y', 3);
 
-		//node.append("title")
-			//  .text(function(d) { return d.name+d.revenue; });
+		/*node.append("title")
+			  .text(function(d) { return d.name+d.revenue; });*/
 	
 		// add the curvy lines
 		function tick() {
@@ -229,13 +233,13 @@ export class App extends PureComponent<Props> {
 				return "translate(" + d.x + "," + d.y + ")"; });
 		}
 
+		//});
 	}
 	
 	
 	async getDatasourceId (grafana_url: string, datasource_name: string) {
 		const url: string = grafana_url+'/api/datasources/name/'+datasource_name;
-		//const api_token = "Bearer eyJrIjoiQXNmeGFPWmxJVGJuZDV3NHhCV0trYmZvN01ZVWZwdlQiLCJuIjoicHJvbWV0aGV1c0tleSIsImlkIjoxfQ==";
-		const api_token = "Bearer eyJrIjoiV0FSREtjbzlaSlM5VDJNQ09hcWgydjE3OE1velJCVUciLCJuIjoicHJvbWV0aGV1c19rZXkiLCJpZCI6MX0=";
+		const api_token = "Bearer eyJrIjoiQXNmeGFPWmxJVGJuZDV3NHhCV0trYmZvN01ZVWZwdlQiLCJuIjoicHJvbWV0aGV1c0tleSIsImlkIjoxfQ==";
 		const headers = { 'Content-Type': 'application/json', 'Authorization': api_token }
 
 		const response = await fetch(url, {headers});
@@ -331,10 +335,7 @@ export class App extends PureComponent<Props> {
 		const url: string = grafana_url + '/api/tsdb/query';
 		//const request_payload = {'from':'1591250314728','to':'1591271914728','queries':'[{"refId":"A","intervalMs":60000,"maxDataPoints":900,"datasourceId":86,"rawSql":"SELECT *\nFROM metrics;\n","format":"table"}]'};
 		//const request_payload = {queries:[{refId:"tempvar",datasourceId:86,"rawSql":"SELECT\n  closed_bugs_count AS \"closed_bugs\",\n  open_bugs_count AS \"open_bugs\",\n  closed_issues_count AS \"closed_issues\",\n  open_issues_count AS \"open_issues\",\n  revenue AS \"revenue\",\n  cost AS \"cost\",\n  effort AS \"effort\",\n  service_name AS \"service_name\"\nFROM metrics\nORDER BY service_name",format:"table"}],"from":"1591251225566","to":"1591272825566"};
-		//const request_payload = {"from":"1591257698882","to":"1591279298882","queries":[{"refId":"A","intervalMs":60000,"maxDataPoints":466,"datasourceId":86,"rawSql":"SELECT\n  closed_bugs_count AS \"closed_bugs\",\n  open_bugs_count AS \"open_bugs\",\n  closed_issues_count AS \"closed_issues\",\n  open_issues_count AS \"open_issues\",\n  revenue AS \"revenue\",\n  cost AS \"cost\",\n  effort AS \"effort\",\n  service_name AS \"service_name\"\nFROM metrics\nORDER BY service_name","format":"table"}]};
-		const datasource_name = "MySQL";
-		const datasourceId = await this.getDatasourceId(grafana_url, datasource_name);
-		const request_payload = {"from":"1591257698882","to":"1591279298882","queries":[{"refId":"A","intervalMs":60000,"maxDataPoints":466,"datasourceId":datasourceId.id,"rawSql":"SELECT\n  service_name AS \"service_name\",\n  closed_bugs_count AS \"closed_bugs\",\n  open_bugs_count AS \"open_bugs\",\n  closed_issues_count AS \"closed_issues\",\n  open_issues_count AS \"open_issues\",\n  revenue AS \"revenue\",\n  cost AS \"cost\",\n  effort AS \"effort\"\nFROM metrics\nORDER BY service_name\n","format":"table"}]};
+		const request_payload = {"from":"1591257698882","to":"1591279298882","queries":[{"refId":"A","intervalMs":60000,"maxDataPoints":466,"datasourceId":86,"rawSql":"SELECT\n  closed_bugs_count AS \"closed_bugs\",\n  open_bugs_count AS \"open_bugs\",\n  closed_issues_count AS \"closed_issues\",\n  open_issues_count AS \"open_issues\",\n  revenue AS \"revenue\",\n  cost AS \"cost\",\n  effort AS \"effort\",\n  service_name AS \"service_name\"\nFROM metrics\nORDER BY service_name","format":"table"}]};
 		
 		const res = await fetch(url, {
 		  method: "POST",
@@ -355,23 +356,16 @@ export class App extends PureComponent<Props> {
 	
 	async sortSQLData() {
 		const res = await this.getSQLData();
-		
-		if (res != [])
-		{
-			console.log("SQL response beloww");
-			console.log(res);
-			console.log("row values");
-			console.log(res.results.A.tables[0].rows);
-			return res.results.A.tables[0].rows;
-		}
-		else 
-			return [];
+		console.log("SQL response beloww");
+		console.log(res);
+		console.log("row values");
+		console.log(res.results.A.tables[0].rows);
 	}
 
 	componentDidMount () {
-		//this.sortSQLData();
+		this.sortSQLData();
 		//this.getPrometheusMetrics();
-		this.mergeMetricsData();
+		this.drawGraph();
 	}
 	
   render() {
