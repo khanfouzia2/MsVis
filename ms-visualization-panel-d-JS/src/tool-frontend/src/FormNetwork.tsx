@@ -2,7 +2,7 @@
 
 
 //DO ADD THE CHECKS TO READ COLUMN VALUES FIRST/ also add checks before fetching parent, child or callCount data
-export function getNetworkData (data: any[], data_: any[]) : any[] {
+export function getNetworkData (data: any[], data_: any[], data__: any[]) : any[] {
 	console.log("Printing grafana DS response inside getNetworkData function");
 	console.log(data);
 	
@@ -10,6 +10,10 @@ export function getNetworkData (data: any[], data_: any[]) : any[] {
 	
 	var prometheusData:any[] = data_;
 	console.log(prometheusData);
+	
+	var businessMetrics:any[] = data__;
+	console.log("businessMetrics insdie FormNetwork");
+	console.log(businessMetrics);
 	//list.sort((a, b) => (a.color > b.color) ? 1 : -1)
 	//To create array of nodes, edges and options
 	var responseArray:any[] = [];
@@ -19,18 +23,18 @@ export function getNetworkData (data: any[], data_: any[]) : any[] {
 		const childNodes = data[0].fields[1].values.toArray();
 		const callCountArr = data[0].fields[2].values.toArray();
 
-		var min_scale = 1;
-		var max_scale = 6;
-		var min_val = arrayMin(callCountArr);
-		var max_val = arrayMax(callCountArr);
+		//var min_scale = 1;
+		//var max_scale = 6;
+		//var min_val = arrayMin(callCountArr);
+		//var max_val = arrayMax(callCountArr);
 		//console.log("Printing min and max values ");
 		
-		var dbs = ['mysql', 'postgre', 'postgresql', 'sql', 'oracle'];
-		var msg_bus = ['redis', 'kafka', 'rabbitmq'];
+		//var dbs = ['mysql', 'postgre', 'postgresql', 'sql', 'oracle'];
+		//var msg_bus = ['redis', 'kafka', 'rabbitmq'];
 		//console.log("printing simple arrays");
 		//console.log(dbs);
-		var array_of_nodes:any[] = [];
-		var array_of_edges = [];
+		//var array_of_nodes:any[] = [];
+		//var array_of_edges = [];
 		
 		var uniqueNodes = (parentNodes.concat(childNodes)).sort(); //added sort()
 		//console.log(uniqueNodes);
@@ -38,12 +42,72 @@ export function getNetworkData (data: any[], data_: any[]) : any[] {
 		console.log(uniqueNodes);
 		
 		var metricsData = [];	
-		for (let i=0; i< uniqueNodes.length; ++i)
+		var nodes = [];
+		var links = [];
+		var open_to_closed_issues_ratio = 0;
+		var open_to_closed_bugs_ratio = 0;
+		var cost_to_revenue_ratio = 0;
+		var effort = 0;
+		var response_time = "0.0";
+		var load_1m = "0";
+		for (let k=0; k<len(businessMetrics); ++k){
+				
+				if (uniqueNodes.includes(businessMetrics[k][0])) {
+					
+					for (let j=0; j<len(prometheusData); ++j){
+					console.log(prometheusData[j][0]);
+					console.log(uniqueNodes[j]);
+					if (prometheusData[j][0].toLowerCase() == businessMetrics[k][0].toLowerCase()){
+						metricsData = prometheusData[j];
+						response_time = metricsData[1];
+						load_1m = metricsData[2];
+						console.log("metric is: ");
+						console.log(metricsData);
+						prometheusData = prometheusData.slice(0, j).concat(prometheusData.slice(j + 1, prometheusData.length));
+						break;
+					}
+					}
+				
+					open_to_closed_issues_ratio = businessMetrics[k][2];
+					open_to_closed_bugs_ratio = businessMetrics[k][4];
+					cost_to_revenue_ratio = businessMetrics[k][7];
+					if (businessMetrics[k][1] !== null){
+						effort = businessMetrics[k][1];
+					}
+					nodes.push({name: businessMetrics[k][0], effort_spent: effort , open_to_closed_issues: open_to_closed_issues_ratio, open_to_closed_bugs: open_to_closed_bugs_ratio, cost_to_revenue: cost_to_revenue_ratio, service_response_time: response_time, service_load_1m: load_1m });
+				}
+				
+		}
+		console.log("&&&&&&&&&Printing nodes array below");
+		console.log(nodes);
+
+		for (let i =0; i< len(parentNodes); ++i){
+			var source_ = -1;
+			var target_ = -1;
+			var calls_ = 0;
+			for (let j =0; j < nodes.length; ++j){
+				if (parentNodes[i] == nodes[j].name)
+					source_ = j;
+				if (childNodes[i] == nodes[j].name){
+					target_ = j;
+					calls_ = callCountArr[i].toString();
+				}
+			}
+			if (source_ > -1 && target_ > -1)
+				links.push({source: source_, target: target_, calls: calls_})
+		}
+		
+		console.log(links);
+		responseArray.push(nodes);
+		responseArray.push(links);
+		/*for (let i=0; i< uniqueNodes.length; ++i)
 		{
 			console.log("lengthhhhhhhhh");
 			console.log(prometheusData);
 			console.log(prometheusData[0]);
 			console.log(len(prometheusData).toString());
+			
+			
 			for (let j=0; j<len(prometheusData); ++j){
 				console.log(prometheusData[j][0]);
 				console.log(uniqueNodes[i]);
@@ -55,6 +119,7 @@ export function getNetworkData (data: any[], data_: any[]) : any[] {
 					break;
 				}
 			}
+			
 			
 			var label = uniqueNodes[i];
 			if (metricsData.length > 0)
@@ -160,8 +225,9 @@ export function getNetworkData (data: any[], data_: any[]) : any[] {
 					strokeColor: '#848484'
 				}
 			  }
-			});
+			});*/
 		return responseArray;
+		//return [];
 	}
 		else {
 			if (data[0].fields[0].values.length < 1)
@@ -200,7 +266,7 @@ function len(arr:any[]) {
   return count;
 }
 
-function arrayMin(arr:any[]) {
+/*function arrayMin(arr:any[]) {
   var len = arr.length, min = Infinity;
   while (len--) {
     if (arr[len] < min) {
@@ -220,10 +286,9 @@ function arrayMax(arr:any[]) {
   return max;
 };
 
-
 function measureScalingFactorForEdge(x:number, minScale:number, maxScale:number, minVal:number, maxVal:number){
 		return ((((maxScale - minScale)*(x - minVal))/(maxVal - minVal)) + minScale);
 	}
-
+*/
 
 export class FormNetwork { }
