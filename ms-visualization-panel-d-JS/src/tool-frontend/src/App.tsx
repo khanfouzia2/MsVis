@@ -201,10 +201,13 @@ export class App extends PureComponent<Props> {
 			  
 		path.append("text")
 				.text(function(d:any) {
+				//console.log("inside path.append('text')");
+				//console.log(d.calls);
+				//console.log("LLLLL");
 				return d.calls;
 			  })
-			  .attr('x', 10)
-			  .attr('y', 3);
+			  .attr('x', 0)
+			  .attr('y', 0);
 
 		//node.append("title")
 			//  .text(function(d) { return d.name+d.revenue; });

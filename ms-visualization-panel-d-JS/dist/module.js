@@ -9862,8 +9862,11 @@ function (_super) {
           return d.name + " " + d.service_response_time + "/ms" + " " + d.service_load_1m + "/m";
         }).attr('x', 10).attr('y', 3);
         path.append("text").text(function (d) {
+          //console.log("inside path.append('text')");
+          //console.log(d.calls);
+          //console.log("LLLLL");
           return d.calls;
-        }).attr('x', 10).attr('y', 3);
+        }).attr('x', 0).attr('y', 0);
         return [2
         /*return*/
         ];
@@ -10207,7 +10210,7 @@ function getNetworkData(data, data_, data__) {
     var cost_to_revenue_ratio = 0;
     var effort = 0;
     var response_time = "0.0";
-    var load_1m = "0";
+    var load_1m = "0"; //var calls = 0;
 
     for (var k = 0; k < len(businessMetrics); ++k) {
       if (uniqueNodes.includes(businessMetrics[k][0])) {
@@ -10226,13 +10229,14 @@ function getNetworkData(data, data_, data__) {
           }
         }
 
-        open_to_closed_issues_ratio = businessMetrics[k][2];
-        open_to_closed_bugs_ratio = businessMetrics[k][4];
-        cost_to_revenue_ratio = businessMetrics[k][7];
+        if ((businessMetrics[k][1] && businessMetrics[k][2]) != null) open_to_closed_issues_ratio = normalized_ratio(businessMetrics[k][1], businessMetrics[k][2]);
+        if ((businessMetrics[k][3] && businessMetrics[k][4]) != null) open_to_closed_bugs_ratio = normalized_ratio(businessMetrics[k][3], businessMetrics[k][4]);
+        if ((businessMetrics[k][5] && businessMetrics[k][6]) != null) cost_to_revenue_ratio = normalized_ratio(businessMetrics[k][5], businessMetrics[k][6]);
 
-        if (businessMetrics[k][1] !== null) {
-          effort = businessMetrics[k][1];
-        }
+        if (businessMetrics[k][7] !== null) {
+          effort = businessMetrics[k][7];
+        } //calls = 
+
 
         nodes.push({
           name: businessMetrics[k][0],
@@ -10431,6 +10435,12 @@ function len(arr) {
   }
 
   return count;
+}
+
+function normalized_ratio(x, y) {
+  console.log("normalized_ratio");
+  console.log(2 * x / (x + y));
+  return 2 * x / (x + y);
 }
 /*function arrayMin(arr:any[]) {
   var len = arr.length, min = Infinity;

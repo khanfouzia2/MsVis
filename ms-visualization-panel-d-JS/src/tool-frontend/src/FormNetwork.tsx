@@ -50,6 +50,7 @@ export function getNetworkData (data: any[], data_: any[], data__: any[]) : any[
 		var effort = 0;
 		var response_time = "0.0";
 		var load_1m = "0";
+		//var calls = 0;
 		for (let k=0; k<len(businessMetrics); ++k){
 				
 				if (uniqueNodes.includes(businessMetrics[k][0])) {
@@ -67,13 +68,16 @@ export function getNetworkData (data: any[], data_: any[], data__: any[]) : any[
 						break;
 					}
 					}
-				
-					open_to_closed_issues_ratio = businessMetrics[k][2];
-					open_to_closed_bugs_ratio = businessMetrics[k][4];
-					cost_to_revenue_ratio = businessMetrics[k][7];
-					if (businessMetrics[k][1] !== null){
-						effort = businessMetrics[k][1];
+					if ((businessMetrics[k][1] && businessMetrics[k][2]) != null)
+						open_to_closed_issues_ratio = normalized_ratio(businessMetrics[k][1], businessMetrics[k][2]);
+					if ((businessMetrics[k][3] && businessMetrics[k][4]) != null)
+						open_to_closed_bugs_ratio = normalized_ratio(businessMetrics[k][3], businessMetrics[k][4]);
+					if ((businessMetrics[k][5] && businessMetrics[k][6]) != null)
+						cost_to_revenue_ratio = normalized_ratio(businessMetrics[k][5], businessMetrics[k][6]);
+					if (businessMetrics[k][7] !== null){
+						effort = businessMetrics[k][7];
 					}
+					//calls = 
 					nodes.push({name: businessMetrics[k][0], effort_spent: effort , open_to_closed_issues: open_to_closed_issues_ratio, open_to_closed_bugs: open_to_closed_bugs_ratio, cost_to_revenue: cost_to_revenue_ratio, service_response_time: response_time, service_load_1m: load_1m });
 				}
 				
@@ -264,6 +268,12 @@ function len(arr:any[]) {
     }
   }
   return count;
+}
+
+function normalized_ratio (x:number, y:number) {
+	console.log("normalized_ratio");
+	console.log((2*x)/(x+y));
+	return ((2*x)/(x+y));
 }
 
 /*function arrayMin(arr:any[]) {
