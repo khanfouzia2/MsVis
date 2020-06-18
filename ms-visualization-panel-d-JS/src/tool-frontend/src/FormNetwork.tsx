@@ -41,13 +41,33 @@ export function getNetworkData (data: any[], data_: any[], data__: any[]) : any[
 		uniqueNodes = [...new Set(uniqueNodes)]; //works
 		console.log(uniqueNodes);
 		
+
+		var min_call = arrayMin(callCountArr);
+		var max_call = arrayMax(callCountArr);
+		
+		if (businessMetrics.length > 0) {
+			var min_effort = businessMetrics[0][7];
+			var max_effort = businessMetrics[0][7];
+			for (let i = 1; i< len(businessMetrics)-1; ++i) {
+				if (businessMetrics[i][7] != null ) {
+					if (businessMetrics[i][7] < min_effort)
+						min_effort = businessMetrics[i][7];
+					if (businessMetrics[i][7] > max_effort)
+						min_effort = businessMetrics[i][7];
+				}
+			}
+			console.log("printing min and max effort value");
+			console.log(min_effort);
+			console.log(max_effort);
+		}
+		
 		var metricsData = [];	
 		var nodes = [];
 		var links = [];
 		var open_to_closed_issues_ratio = 0;
 		var open_to_closed_bugs_ratio = 0;
 		var cost_to_revenue_ratio = 0;
-		var effort = 0;
+		var normalized_effort = 0;
 		var response_time = "0.0";
 		var load_1m = "0";
 		//var calls = 0;
@@ -75,10 +95,9 @@ export function getNetworkData (data: any[], data_: any[], data__: any[]) : any[
 					if ((businessMetrics[k][5] && businessMetrics[k][6]) != null)
 						cost_to_revenue_ratio = normalized_ratio(businessMetrics[k][5], businessMetrics[k][6]);
 					if (businessMetrics[k][7] !== null){
-						effort = businessMetrics[k][7];
+						normalized_effort = measureScalingFactor(businessMetrics[k][7], 0, 2, min_effort, max_effort);
 					}
-					//calls = 
-					nodes.push({name: businessMetrics[k][0], effort_spent: effort , open_to_closed_issues: open_to_closed_issues_ratio, open_to_closed_bugs: open_to_closed_bugs_ratio, cost_to_revenue: cost_to_revenue_ratio, service_response_time: response_time, service_load_1m: load_1m });
+					nodes.push({name: businessMetrics[k][0], effort_spent: normalized_effort , open_to_closed_issues: open_to_closed_issues_ratio, open_to_closed_bugs: open_to_closed_bugs_ratio, cost_to_revenue: cost_to_revenue_ratio, service_response_time: response_time, service_load_1m: load_1m });
 				}
 				
 		}
@@ -89,16 +108,18 @@ export function getNetworkData (data: any[], data_: any[], data__: any[]) : any[
 			var source_ = -1;
 			var target_ = -1;
 			var calls_ = 0;
+			var call_weight_ = 1;
 			for (let j =0; j < nodes.length; ++j){
 				if (parentNodes[i] == nodes[j].name)
 					source_ = j;
 				if (childNodes[i] == nodes[j].name){
 					target_ = j;
 					calls_ = callCountArr[i].toString();
+					call_weight_ = measureScalingFactor(callCountArr[i], 1, 9, min_call, max_call);
 				}
 			}
 			if (source_ > -1 && target_ > -1)
-				links.push({source: source_, target: target_, calls: calls_})
+				links.push({source: source_, target: target_, calls: calls_, call_weight: call_weight_})
 		}
 		
 		console.log(links);
@@ -276,7 +297,7 @@ function normalized_ratio (x:number, y:number) {
 	return ((2*x)/(x+y));
 }
 
-/*function arrayMin(arr:any[]) {
+function arrayMin(arr:any[]) {
   var len = arr.length, min = Infinity;
   while (len--) {
     if (arr[len] < min) {
@@ -296,9 +317,9 @@ function arrayMax(arr:any[]) {
   return max;
 };
 
-function measureScalingFactorForEdge(x:number, minScale:number, maxScale:number, minVal:number, maxVal:number){
+function measureScalingFactor(x:number, minScale:number, maxScale:number, minVal:number, maxVal:number){
 		return ((((maxScale - minScale)*(x - minVal))/(maxVal - minVal)) + minScale);
 	}
-*/
+
 
 export class FormNetwork { }

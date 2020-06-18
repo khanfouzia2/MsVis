@@ -65,6 +65,22 @@ export class App extends PureComponent<Props> {
 	}
 	
 	async drawGraph(metrics_data:any[]){
+		var d3 = require('../d3js_modules/d3.v3.min.js');
+		
+		// select the svg area for graph's legend
+		var svg = d3.select("#graph_legend")
+
+		// Draw legend
+		svg.append("circle").attr("cx",50).attr("cy",50).attr("r", 7).style("fill", "green").style("stroke-width", 0)
+		svg.append("circle").attr("cx",50).attr("cy",70).attr("r", 7).style("fill", "#CCCC00").style("stroke-width", 0)
+		svg.append("circle").attr("cx",50).attr("cy",90).attr("r", 7).style("fill", "red").style("stroke-width", 0)
+		svg.append("circle").attr("cx",50).attr("cy",110).attr("r", 7).style("fill", "brown").style("stroke-width", 0)
+		svg.append("circle").attr("cx",50).attr("cy",130).attr("r", 7).style("fill", "blue").style("stroke-width", 0)
+		svg.append("text").attr("x", 70).attr("y", 50).text("Microservice").style("font-size", "12px").attr("alignment-baseline","middle")
+		svg.append("text").attr("x", 70).attr("y", 70).text("Effort spent").style("font-size", "12px").attr("alignment-baseline","middle")
+		svg.append("text").attr("x", 70).attr("y", 90).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline","middle")
+		svg.append("text").attr("x", 70).attr("y", 110).text("Revenue to cost ratio").style("font-size", "12px").attr("alignment-baseline","middle")
+		svg.append("text").attr("x", 70).attr("y", 130).text("Issues closed").style("font-size", "12px").attr("alignment-baseline","middle")
 		/*var dataset = {
 
 			nodes: [
@@ -84,17 +100,15 @@ export class App extends PureComponent<Props> {
 			]
 		};*/
 		
-		var dataset = {nodes: metrics_data[0], links: metrics_data[1]};
-			
+		var dataset = {nodes: metrics_data[0], links: metrics_data[1]};	
 
 		//var business_metrics = [["frontend",10,13,30,15,31,13,27],["customer",11,14,35,18,41,9,19],["route",21,24,45,58,41,19,99], ["mysql", 2, 4, 5, 2, 5, 2, 9], ["redis", 33, 19, 44, 66, 22, 77, 90], ["driver", 22, 23, 25, 26 ,26, 19, 50]];
 
 		//d3.csv("force.csv", function(error, links) {
 
-		var width = 1000,
-			height = 900;
+		var width = 1200,
+			height = 570;
 
-		var d3 = require('../d3js_modules/d3.v3.min.js');
 		//const s = require('./App.css');
 		
 		var force = d3.layout.force()
@@ -117,12 +131,13 @@ export class App extends PureComponent<Props> {
 		  .enter().append("svg:marker")    // This section adds in the arrows
 			.attr("id", String)
 			.attr("viewBox", "0 -5 10 10")
-			.attr("refX", 40)
-			.attr("refY", -4.5)
-			.attr("markerWidth", 9)
-			.attr("markerHeight", 7)
+			.attr("refX", 34)
+			.attr("refY", -4)
+			.attr("markerUnits", "userSpaceOnUse")
+			.attr("markerWidth", 16)
+			.attr("markerHeight", 13)
 			.attr("orient", "auto")
-		  .append("svg:path")
+			.append("svg:path")
 			.attr("d", "M0,-5L10,0L0,5");
 
 		// add the links and the arrows
@@ -134,7 +149,8 @@ export class App extends PureComponent<Props> {
 			.style("fill", "none")
 			.style("stroke", "#666")
 			.style("stroke-width", "1.5px")
-			.attr("marker-end", "url(#end)");
+			.attr("marker-end", "url(#end)")
+			.style("stroke-width", function(d:any) { return ((d.call_weight).toString() + "px"); });
 
 		// define the nodes
 		var node = svg.selectAll(".node")
@@ -378,12 +394,25 @@ export class App extends PureComponent<Props> {
 	}
 	
   render() {
-
-    return (
-      <div>
+	var legend_style = { cssFloat:'left', borderStyle:'solid' } as React.CSSProperties;
+	var mynetwork_style = {"height":"150px", "width":"200px", cssFloat:'right'} as React.CSSProperties;
+    //var mynetwork_style = { float:'left', border-style:'solid', height:'150px', width:'200px' } as React.CSSProperties;
+/*	var legend_style = {
+     splitterStyle: {
+         height: 150px,
+		 width: 200px,
+		 float: right
+     }
+};*/
+	return (
+      /*<div style="height:700px;width:600px">
 		<p>Microservices Call Dependency Graph</p>
 		<div id = "mynetwork" className="Graph"></div>
-      </div>
+      </div>*/
+	  <div id="mynetwork" className="Graph" style={legend_style}>
+		<p>Microservices Call Dependency Graph</p>
+		<div style={mynetwork_style}><svg id="graph_legend" ></svg></div>
+	  </div>
     );
   }
   
