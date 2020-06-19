@@ -9809,7 +9809,7 @@ function (_super) {
         });
       }
 
-      var d3, svg, dataset, width, height, force, svg, path, node, svg, arc, arc2, arc3, arc4;
+      var d3, svg, dataset, width, height, force, svg, path, node, svg, arc, arc2, arc3, arc4, arc0;
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         d3 = __webpack_require__(/*! ../d3js_modules/d3.v3.min.js */ "./tool-frontend/d3js_modules/d3.v3.min.js");
         svg = d3.select("#graph_legend"); // Draw legend
@@ -9846,7 +9846,34 @@ function (_super) {
         arc2 = d3.svg.arc().innerRadius(20).outerRadius(20);
         arc3 = d3.svg.arc().innerRadius(15).outerRadius(15);
         arc4 = d3.svg.arc().innerRadius(35).outerRadius(35);
+        arc0 = d3.svg.arc().innerRadius(30).outerRadius(30);
         node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white");
+        node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85044500-60796280-b196-11ea-8344-b116fe794eed.png").attr("x", -55).attr("y", -90).attr("width", function (d) {
+          if (d.name == ("mysql" || false || false || false)) {
+            return 110;
+          } else return 0;
+        }).attr("height", function (d) {
+          if (d.name == ("mysql" || false || false || false)) {
+            return 185;
+          } else return 0;
+        });
+        node.append("image").attr("xlink:href", " https://user-images.githubusercontent.com/34706505/85069275-8285db80-b1bc-11ea-8928-f60c261854b0.PNG").attr("x", -45).attr("y", -15).attr("width", function (d) {
+          if (d.name == ("redis" || false || false)) {
+            return 90;
+          } else return 0;
+        }).attr("height", function (d) {
+          if (d.name == ("redis" || false || false)) {
+            return 30;
+          } else return 0;
+        }); //node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3)
+
+        node.append("path").attr("stroke-width", 3).attr("stroke", "green").attr("d", function (d, i) {
+          return arc0({
+            startAngle: 0,
+            endAngle: Math.PI * 2
+          });
+        }); //node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white")
+
         node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "#CCCC00").attr("d", function (d, i) {
           return arc3({
             startAngle: 0,

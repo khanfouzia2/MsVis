@@ -180,36 +180,8 @@ export class App extends PureComponent<Props> {
 		var arc4 = d3.svg.arc()
 		  .innerRadius(35)
 		  .outerRadius(35);
-		 
-		var arc0 = d3.svg.arc()
-		  .innerRadius(30)
-		  .outerRadius(30);
-
-
+		  
 		node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white")
-
-		node.append("image")
-			.attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85044500-60796280-b196-11ea-8344-b116fe794eed.png")
-			.attr("x", -55)
-			.attr("y", -90)
-			.attr("width", (function(d:any) {if (d.name == ("mysql" || "sql" || "MariaDB" || "mongoDB")) {return 110} else return 0}))
-			.attr("height", (function(d:any) {if (d.name == ("mysql" || "sql" || "MariaDB" || "mongoDB")) {return 185} else return 0}));
-
-		node.append("image")
-			.attr("xlink:href", " https://user-images.githubusercontent.com/34706505/85069275-8285db80-b1bc-11ea-8928-f60c261854b0.PNG")
-			.attr("x", -45)
-			.attr("y", -15)
-			.attr("width", (function(d:any) {if (d.name == ("redis" || "kafka" || "rabbitMQ")) {return 90} else return 0}))
-			.attr("height", (function(d:any) {if (d.name == ("redis" || "kafka" || "rabbitMQ")) {return 30} else return 0}));
-			   
-		//node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3)
-		node.append("path")
-		  .attr("stroke-width", 3)
-		  .attr("stroke", "green")
-		  .attr("d", (function(d:any,i:any) { return arc0({startAngle:0, endAngle:(Math.PI)*2}); }))
-		 
-		 
-		//node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white")
 		node.append("path")
 		  .attr("fill", "none")
 		  .attr("stroke-width", 3)
