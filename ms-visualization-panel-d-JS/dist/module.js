@@ -9794,8 +9794,6 @@ function (_super) {
 
   App.prototype.drawGraph = function (metrics_data) {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
-      //node.append("title")
-      //  .text(function(d) { return d.name+d.revenue; });
       // add the curvy lines
       function tick() {
         path.attr("d", function (d) {
@@ -9809,7 +9807,8 @@ function (_super) {
         });
       }
 
-      var d3, svg, dataset, width, height, force, svg, path, node, svg, arc, arc2, arc3, arc4, arc0;
+      var d3, svg, dataset, width, height, force, svg, id, path, text_, node, svg, arc, arc2, arc3, arc4, arc0, _loop_1, i;
+
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         d3 = __webpack_require__(/*! ../d3js_modules/d3.v3.min.js */ "./tool-frontend/d3js_modules/d3.v3.min.js");
         svg = d3.select("#graph_legend"); // Draw legend
@@ -9827,7 +9826,14 @@ function (_super) {
         dataset = {
           nodes: metrics_data[0],
           links: metrics_data[1]
-        };
+        }; //var business_metrics = [["frontend",10,13,30,15,31,13,27],["customer",11,14,35,18,41,9,19],["route",21,24,45,58,41,19,99], ["mysql", 2, 4, 5, 2, 5, 2, 9], ["redis", 33, 19, 44, 66, 22, 77, 90], ["driver", 22, 23, 25, 26 ,26, 19, 50]];
+        //d3.csv("force.csv", function(error, links) {
+
+        console.log("dataset");
+        console.log(dataset);
+        console.log(dataset.links);
+        console.log(dataset.links[0]);
+        console.log(dataset.links[0].calls);
         width = 1200, height = 570;
         force = d3.layout.force().nodes(d3.values(dataset.nodes)).links(dataset.links).size([width, height]).linkDistance(170).charge(-900).on("tick", tick).start();
         svg = d3.select("#mynetwork").append("svg").attr("width", width).attr("height", height); // build the arrow.
@@ -9835,11 +9841,17 @@ function (_super) {
         svg.append("svg:defs").selectAll("marker").data(["end"]) // Different link/path types can be defined here
         .enter().append("svg:marker") // This section adds in the arrows
         .attr("id", String).attr("viewBox", "0 -5 10 10").attr("refX", 34).attr("refY", -4).attr("markerUnits", "userSpaceOnUse").attr("markerWidth", 16).attr("markerHeight", 13).attr("orient", "auto").append("svg:path").attr("d", "M0,-5L10,0L0,5");
+        id = -1;
         path = svg.append("svg:g").selectAll("path").data(dataset.links).enter().append("svg:path") //.attr("class", function(d:any) { return "link " + d.type; }) //???
         //.attr("class", "link")
         .style("fill", "none").style("stroke", "#666").style("stroke-width", "1.5px").attr("marker-end", "url(#end)").style("stroke-width", function (d) {
           return d.call_weight.toString() + "px";
+        }).attr("id", function (d) {
+          console.log(id + 1);
+          id = id + 1;
+          return id.toString();
         });
+        text_ = svg.append("text").attr("x", 0).attr("dy", 0);
         node = svg.selectAll(".node").data(dataset.nodes).enter().append("g").attr("class", "node").call(force.drag);
         svg = d3.select("svg").append("g").attr("transform", "translate(150,75)");
         arc = d3.svg.arc().innerRadius(25).outerRadius(25);
@@ -9902,12 +9914,34 @@ function (_super) {
         node.append("text").text(function (d) {
           return d.name + " " + d.service_response_time + "/ms" + " " + d.service_load_1m + "/m";
         }).attr('x', 10).attr('y', 3);
-        path.append("text").text(function (d) {
-          //console.log("inside path.append('text')");
-          //console.log(d.calls);
-          //console.log("LLLLL");
-          return d.calls;
-        }).attr('x', 0).attr('y', 0);
+
+        _loop_1 = function _loop_1(i) {
+          text_.append("textPath").attr("stroke", "black").attr("xlink:href", function (d) {
+            return "#" + i.toString();
+          }).style("text-anchor", "middle") //place the text halfway on the arc
+          .attr("startOffset", "50%").text(function (d) {
+            console.log(dataset.links[i].calls);
+            return dataset.links[i].calls + "calls";
+          });
+          console.log(i);
+        };
+        /*path.append("text")
+                .text(function(d:any) {
+                //console.log("inside path.append('text')");
+                //console.log(d.calls);
+                //console.log("LLLLL");
+                return d.calls;
+              })
+              .attr('x', 0)
+              .attr('y', 0);*/
+        //node.append("title")
+        //  .text(function(d) { return d.name+d.revenue; });
+
+
+        for (i = 0; i <= id; i++) {
+          _loop_1(i);
+        }
+
         return [2
         /*return*/
         ];

@@ -140,6 +140,7 @@ export class App extends PureComponent<Props> {
 			.append("svg:path")
 			.attr("d", "M0,-5L10,0L0,5");
 
+		var id = -1;
 		// add the links and the arrows
 		var path = svg.append("svg:g").selectAll("path")
 			.data(dataset.links)
@@ -150,7 +151,14 @@ export class App extends PureComponent<Props> {
 			.style("stroke", "#666")
 			.style("stroke-width", "1.5px")
 			.attr("marker-end", "url(#end)")
-			.style("stroke-width", function(d:any) { return ((d.call_weight).toString() + "px"); });
+			.style("stroke-width", function(d:any) { return ((d.call_weight).toString() + "px"); })
+			.attr("id", (function(d:any) {console.log(id+1); id = id + 1; return id.toString();}));
+
+		// Add a text label.
+		var text_ = svg.append("text")
+			.attr("x", 0)
+			.attr("dy", 0)
+			
 
 		// define the nodes
 		var node = svg.selectAll(".node")
@@ -243,7 +251,7 @@ export class App extends PureComponent<Props> {
 			  .attr('x', 10)
 			  .attr('y', 3);
 			  
-		path.append("text")
+		/*path.append("text")
 				.text(function(d:any) {
 				//console.log("inside path.append('text')");
 				//console.log(d.calls);
@@ -251,10 +259,20 @@ export class App extends PureComponent<Props> {
 				return d.calls;
 			  })
 			  .attr('x', 0)
-			  .attr('y', 0);
+			  .attr('y', 0);*/
 
 		//node.append("title")
 			//  .text(function(d) { return d.name+d.revenue; });
+	
+		for (let i=0; i<=id; i++){
+		text_.append("textPath")
+			.attr("stroke","black")
+			.attr("xlink:href",(function(d:any) {return ("#"+i.toString())}))
+			.style("text-anchor","middle") //place the text halfway on the arc
+			.attr("startOffset", "50%")
+			.text((function (d:any) {console.log(dataset.links[i].calls); return ((dataset.links[i].calls)+"calls")}))
+		console.log(i);
+		}
 	
 		// add the curvy lines
 		function tick() {
