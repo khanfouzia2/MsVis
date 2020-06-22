@@ -28,7 +28,6 @@ export class App extends PureComponent<Props> {
 			const prometheus_metrics = await this.getPrometheusMetrics();
 			console.log("Prometheus metrics_data inside drawGraph");
 			console.log(prometheus_metrics);
-			console.log(prometheus_metrics.length);
 			
 			const business_metrics = await this.sortSQLData();
 			console.log("Printing SQLData inside draw graph after prometheus metrics");
@@ -72,15 +71,15 @@ export class App extends PureComponent<Props> {
 
 		// Draw legend
 		svg.append("circle").attr("cx",50).attr("cy",50).attr("r", 7).style("fill", "green").style("stroke-width", 0)
-		svg.append("circle").attr("cx",50).attr("cy",70).attr("r", 7).style("fill", "#CCCC00").style("stroke-width", 0)
-		svg.append("circle").attr("cx",50).attr("cy",90).attr("r", 7).style("fill", "red").style("stroke-width", 0)
-		svg.append("circle").attr("cx",50).attr("cy",110).attr("r", 7).style("fill", "brown").style("stroke-width", 0)
-		svg.append("circle").attr("cx",50).attr("cy",130).attr("r", 7).style("fill", "blue").style("stroke-width", 0)
+		svg.append("circle").attr("cx",50).attr("cy",70).attr("r", 7).style("fill", "red").style("stroke-width", 0)
+		svg.append("circle").attr("cx",50).attr("cy",90).attr("r", 7).style("fill", "#CCCC00").style("stroke-width", 0)
+		svg.append("circle").attr("cx",50).attr("cy",110).attr("r", 7).style("fill", "blue").style("stroke-width", 0)
+		svg.append("circle").attr("cx",50).attr("cy",130).attr("r", 7).style("fill", "brown").style("stroke-width", 0)
 		svg.append("text").attr("x", 70).attr("y", 50).text("Microservice").style("font-size", "12px").attr("alignment-baseline","middle")
-		svg.append("text").attr("x", 70).attr("y", 70).text("Effort spent").style("font-size", "12px").attr("alignment-baseline","middle")
-		svg.append("text").attr("x", 70).attr("y", 90).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline","middle")
-		svg.append("text").attr("x", 70).attr("y", 110).text("Revenue to cost ratio").style("font-size", "12px").attr("alignment-baseline","middle")
-		svg.append("text").attr("x", 70).attr("y", 130).text("Issues closed").style("font-size", "12px").attr("alignment-baseline","middle")
+		svg.append("text").attr("x", 70).attr("y", 70).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline","middle")
+		svg.append("text").attr("x", 70).attr("y", 90).text("Effort spent").style("font-size", "12px").attr("alignment-baseline","middle")
+		svg.append("text").attr("x", 70).attr("y", 110).text("Issues closed").style("font-size", "12px").attr("alignment-baseline","middle")
+		svg.append("text").attr("x", 70).attr("y", 130).text("Revenue to cost ratio").style("font-size", "12px").attr("alignment-baseline","middle")
 		/*var dataset = {
 
 			nodes: [
@@ -102,6 +101,10 @@ export class App extends PureComponent<Props> {
 		
 		var dataset = {nodes: metrics_data[0], links: metrics_data[1]};	
 
+		console.log("calls check#####");
+		console.log(dataset);
+		console.log(dataset.links[0]);
+		console.log(dataset.links[0].calls);
 		//var business_metrics = [["frontend",10,13,30,15,31,13,27],["customer",11,14,35,18,41,9,19],["route",21,24,45,58,41,19,99], ["mysql", 2, 4, 5, 2, 5, 2, 9], ["redis", 33, 19, 44, 66, 22, 77, 90], ["driver", 22, 23, 25, 26 ,26, 19, 50]];
 
 		//d3.csv("force.csv", function(error, links) {
@@ -152,7 +155,7 @@ export class App extends PureComponent<Props> {
 			.style("stroke-width", "1.5px")
 			.attr("marker-end", "url(#end)")
 			.style("stroke-width", function(d:any) { return ((d.call_weight).toString() + "px"); })
-			.attr("id", (function(d:any) {console.log(id+1); id = id + 1; return id.toString();}));
+			.attr("id", (function(d:any) {id = id + 1; return id.toString();}));
 
 		// Add a text label.
 		var text_ = svg.append("text")
@@ -197,16 +200,16 @@ export class App extends PureComponent<Props> {
 		node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white")
 
 		node.append("image")
-			.attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85044500-60796280-b196-11ea-8344-b116fe794eed.png")
-			.attr("x", -55)
-			.attr("y", -90)
+			.attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85265523-0ff65380-b47b-11ea-9521-7bbcade80d11.png")
+			.attr("x", -10)
+			.attr("y", -15)
 			.attr("width", (function(d:any) {if (d.name == ("mysql" || "sql" || "MariaDB" || "mongoDB")) {return 110} else return 0}))
 			.attr("height", (function(d:any) {if (d.name == ("mysql" || "sql" || "MariaDB" || "mongoDB")) {return 185} else return 0}));
 
 		node.append("image")
-			.attr("xlink:href", " https://user-images.githubusercontent.com/34706505/85069275-8285db80-b1bc-11ea-8928-f60c261854b0.PNG")
-			.attr("x", -45)
-			.attr("y", -15)
+			.attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85262153-0c140280-b476-11ea-955a-8fb3173167b9.jpg")
+			.attr("x", -18)
+			.attr("y", -18)
 			.attr("width", (function(d:any) {if (d.name == ("redis" || "kafka" || "rabbitMQ")) {return 90} else return 0}))
 			.attr("height", (function(d:any) {if (d.name == ("redis" || "kafka" || "rabbitMQ")) {return 30} else return 0}));
 			   
@@ -270,8 +273,7 @@ export class App extends PureComponent<Props> {
 			.attr("xlink:href",(function(d:any) {return ("#"+i.toString())}))
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.attr("startOffset", "50%")
-			.text((function (d:any) {console.log(dataset.links[i].calls); return ((dataset.links[i].calls)+"calls")}))
-		console.log(i);
+			.text((function (d:any) {return ((dataset.links[i].calls)+"calls")}))
 		}
 	
 		// add the curvy lines
@@ -332,7 +334,7 @@ export class App extends PureComponent<Props> {
 		//this.getDatasourceId(grafana_url, datasource_name).then((response) => {
 		const response = await this.getDatasourceId(grafana_url, datasource_name);
 				console.log(response);
-				console.log("response aboveeeeeeeeee");
+				console.log("response from datasource api");
 			//if (response.status == 200 && response.statusText == "OK") {} // add error response check here
 				//const DS_proxy_url = grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query=up%7Bjob!%3D"prometheus"%7D&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
 				var DS_proxy_url = grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query=up{job!="prometheus"}&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
@@ -362,24 +364,14 @@ export class App extends PureComponent<Props> {
 								//console.log(arr);
 								metrics_data.push(arr);
 							}
-							console.log("Printing metrics_data length INSIDE### ");
+							console.log("Metrics_data length");
 							console.log(metrics_data.length);
-							if (metrics_data.length > 0) {
-								console.log("Printing metrics_data array INSIDE### ");
-								console.log(metrics_data);
-								console.log(metrics_data.length);
-							}
 						}
 					}
 				}
 				
 				console.log("Printing metrics_data length OUTSIDE ### ");
 				console.log(metrics_data.length);
-				if (metrics_data.length > 0) {
-						console.log("Printing metrics_data array OUTSIDE ### ");
-						console.log(metrics_data);
-						console.log(metrics_data.length);
-				}
 				/*END*/
 				
 			//});
@@ -423,10 +415,6 @@ export class App extends PureComponent<Props> {
 		
 		if (res != [])
 		{
-			console.log("SQL response beloww");
-			console.log(res);
-			console.log("row values");
-			console.log(res.results.A.tables[0].rows);
 			return res.results.A.tables[0].rows;
 		}
 		else 

@@ -9760,7 +9760,6 @@ function (_super) {
             prometheus_metrics = _a.sent();
             console.log("Prometheus metrics_data inside drawGraph");
             console.log(prometheus_metrics);
-            console.log(prometheus_metrics.length);
             return [4
             /*yield*/
             , this.sortSQLData()];
@@ -9814,24 +9813,21 @@ function (_super) {
         svg = d3.select("#graph_legend"); // Draw legend
 
         svg.append("circle").attr("cx", 50).attr("cy", 50).attr("r", 7).style("fill", "green").style("stroke-width", 0);
-        svg.append("circle").attr("cx", 50).attr("cy", 70).attr("r", 7).style("fill", "#CCCC00").style("stroke-width", 0);
-        svg.append("circle").attr("cx", 50).attr("cy", 90).attr("r", 7).style("fill", "red").style("stroke-width", 0);
-        svg.append("circle").attr("cx", 50).attr("cy", 110).attr("r", 7).style("fill", "brown").style("stroke-width", 0);
-        svg.append("circle").attr("cx", 50).attr("cy", 130).attr("r", 7).style("fill", "blue").style("stroke-width", 0);
+        svg.append("circle").attr("cx", 50).attr("cy", 70).attr("r", 7).style("fill", "red").style("stroke-width", 0);
+        svg.append("circle").attr("cx", 50).attr("cy", 90).attr("r", 7).style("fill", "#CCCC00").style("stroke-width", 0);
+        svg.append("circle").attr("cx", 50).attr("cy", 110).attr("r", 7).style("fill", "blue").style("stroke-width", 0);
+        svg.append("circle").attr("cx", 50).attr("cy", 130).attr("r", 7).style("fill", "brown").style("stroke-width", 0);
         svg.append("text").attr("x", 70).attr("y", 50).text("Microservice").style("font-size", "12px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 70).attr("y", 70).text("Effort spent").style("font-size", "12px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 70).attr("y", 90).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 70).attr("y", 110).text("Revenue to cost ratio").style("font-size", "12px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 70).attr("y", 130).text("Issues closed").style("font-size", "12px").attr("alignment-baseline", "middle");
+        svg.append("text").attr("x", 70).attr("y", 70).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline", "middle");
+        svg.append("text").attr("x", 70).attr("y", 90).text("Effort spent").style("font-size", "12px").attr("alignment-baseline", "middle");
+        svg.append("text").attr("x", 70).attr("y", 110).text("Issues closed").style("font-size", "12px").attr("alignment-baseline", "middle");
+        svg.append("text").attr("x", 70).attr("y", 130).text("Revenue to cost ratio").style("font-size", "12px").attr("alignment-baseline", "middle");
         dataset = {
           nodes: metrics_data[0],
           links: metrics_data[1]
-        }; //var business_metrics = [["frontend",10,13,30,15,31,13,27],["customer",11,14,35,18,41,9,19],["route",21,24,45,58,41,19,99], ["mysql", 2, 4, 5, 2, 5, 2, 9], ["redis", 33, 19, 44, 66, 22, 77, 90], ["driver", 22, 23, 25, 26 ,26, 19, 50]];
-        //d3.csv("force.csv", function(error, links) {
-
-        console.log("dataset");
+        };
+        console.log("calls check#####");
         console.log(dataset);
-        console.log(dataset.links);
         console.log(dataset.links[0]);
         console.log(dataset.links[0].calls);
         width = 1200, height = 570;
@@ -9847,7 +9843,6 @@ function (_super) {
         .style("fill", "none").style("stroke", "#666").style("stroke-width", "1.5px").attr("marker-end", "url(#end)").style("stroke-width", function (d) {
           return d.call_weight.toString() + "px";
         }).attr("id", function (d) {
-          console.log(id + 1);
           id = id + 1;
           return id.toString();
         });
@@ -9860,7 +9855,7 @@ function (_super) {
         arc4 = d3.svg.arc().innerRadius(35).outerRadius(35);
         arc0 = d3.svg.arc().innerRadius(30).outerRadius(30);
         node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white");
-        node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85044500-60796280-b196-11ea-8344-b116fe794eed.png").attr("x", -55).attr("y", -90).attr("width", function (d) {
+        node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85265523-0ff65380-b47b-11ea-9521-7bbcade80d11.png").attr("x", -10).attr("y", -15).attr("width", function (d) {
           if (d.name == ("mysql" || false || false || false)) {
             return 110;
           } else return 0;
@@ -9869,7 +9864,7 @@ function (_super) {
             return 185;
           } else return 0;
         });
-        node.append("image").attr("xlink:href", " https://user-images.githubusercontent.com/34706505/85069275-8285db80-b1bc-11ea-8928-f60c261854b0.PNG").attr("x", -45).attr("y", -15).attr("width", function (d) {
+        node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85262153-0c140280-b476-11ea-955a-8fb3173167b9.jpg").attr("x", -18).attr("y", -18).attr("width", function (d) {
           if (d.name == ("redis" || false || false)) {
             return 90;
           } else return 0;
@@ -9920,10 +9915,8 @@ function (_super) {
             return "#" + i.toString();
           }).style("text-anchor", "middle") //place the text halfway on the arc
           .attr("startOffset", "50%").text(function (d) {
-            console.log(dataset.links[i].calls);
             return dataset.links[i].calls + "calls";
           });
-          console.log(i);
         };
         /*path.append("text")
                 .text(function(d:any) {
@@ -10036,7 +10029,7 @@ function (_super) {
           case 1:
             response = _a.sent();
             console.log(response);
-            console.log("response aboveeeeeeeeee");
+            console.log("response from datasource api");
             DS_proxy_url = grafana_url + '/api/datasources/' + response.access + '/' + response.id.toString() + '/api/v1/query_range?query=up{job!="prometheus"}&start=' + Math.floor(Date.now() / 1000).toString() + '&end=' + Math.floor(Date.now() / 1000).toString() + '&step=30';
             return [4
             /*yield*/
@@ -10079,14 +10072,8 @@ function (_super) {
                 metrics_data.push(arr);
               }
 
-              console.log("Printing metrics_data length INSIDE### ");
+              console.log("Metrics_data length");
               console.log(metrics_data.length);
-
-              if (metrics_data.length > 0) {
-                console.log("Printing metrics_data array INSIDE### ");
-                console.log(metrics_data);
-                console.log(metrics_data.length);
-              }
             }
 
             _a.label = 5;
@@ -10094,15 +10081,8 @@ function (_super) {
           case 5:
             console.log("Printing metrics_data length OUTSIDE ### ");
             console.log(metrics_data.length);
-
-            if (metrics_data.length > 0) {
-              console.log("Printing metrics_data array OUTSIDE ### ");
-              console.log(metrics_data);
-              console.log(metrics_data.length);
-            }
             /*END*/
             //});
-
 
             return [2
             /*return*/
@@ -10189,10 +10169,6 @@ function (_super) {
             res = _a.sent();
 
             if (res != []) {
-              console.log("SQL response beloww");
-              console.log(res);
-              console.log("row values");
-              console.log(res.results.A.tables[0].rows);
               return [2
               /*return*/
               , res.results.A.tables[0].rows];
