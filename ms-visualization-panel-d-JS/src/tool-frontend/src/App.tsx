@@ -70,7 +70,7 @@ export class App extends PureComponent<Props> {
 		var svg = d3.select("#graph_legend")
 
 		// Draw legend
-		svg.append("circle").attr("cx",50).attr("cy",50).attr("r", 7).style("fill", "green").style("stroke-width", 0)
+		svg.append("circle").attr("cx",50).attr("cy",50).attr("r", 7).style("fill", "black").style("stroke-width", 0)
 		svg.append("circle").attr("cx",50).attr("cy",70).attr("r", 7).style("fill", "red").style("stroke-width", 0)
 		svg.append("circle").attr("cx",50).attr("cy",90).attr("r", 7).style("fill", "#CCCC00").style("stroke-width", 0)
 		svg.append("circle").attr("cx",50).attr("cy",110).attr("r", 7).style("fill", "blue").style("stroke-width", 0)
@@ -81,7 +81,6 @@ export class App extends PureComponent<Props> {
 		svg.append("text").attr("x", 70).attr("y", 110).text("Issues closed").style("font-size", "12px").attr("alignment-baseline","middle")
 		svg.append("text").attr("x", 70).attr("y", 130).text("Revenue to cost ratio").style("font-size", "12px").attr("alignment-baseline","middle")
 		/*var dataset = {
-
 			nodes: [
 			{name1: "frontend", effort: 1, open_issues: 20, closed_issues: 30, open_bugs: 50, closed_bugs: 69, cost: 5000, revenue: 9800},
 			{name1: "customer", effort: 1.5, open_issues: 90, closed_issues: 33, open_bugs: 10, closed_bugs: 49, cost: 4000, revenue: 6000},
@@ -177,48 +176,58 @@ export class App extends PureComponent<Props> {
 		.attr("transform", "translate(150,75)");
 
 		var arc = d3.svg.arc()
-		  .innerRadius(25)
-		  .outerRadius(25);
+		  .innerRadius(33)
+		  .outerRadius(33);
 		  
 		var arc2 = d3.svg.arc()
-		  .innerRadius(20)
-		  .outerRadius(20);
+		  .innerRadius(27)
+		  .outerRadius(27);
 		  
 		var arc3 = d3.svg.arc()
-		  .innerRadius(15)
-		  .outerRadius(15);
+		  .innerRadius(21)
+		  .outerRadius(21);
 		  
 		var arc4 = d3.svg.arc()
-		  .innerRadius(35)
-		  .outerRadius(35);
+		  .innerRadius(38)
+		  .outerRadius(38);
 		 
-		var arc0 = d3.svg.arc()
+		/*var arc0 = d3.svg.arc()
 		  .innerRadius(30)
-		  .outerRadius(30);
+		  .outerRadius(30);*/
 
+		var msg_bus = ["redis", "kafka", "rabbitMQ"];
+		var db = ["mysql", "sql", "MariaDB", "mongoDB"];
 
-		node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white")
+		node.append("circle").attr("r", 30).style("stroke", "transparent").style("stroke-width", 3).style("fill", "white")
 
 		node.append("image")
 			.attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85265523-0ff65380-b47b-11ea-9521-7bbcade80d11.png")
 			.attr("x", -10)
 			.attr("y", -15)
-			.attr("width", (function(d:any) {if (d.name == ("mysql" || "sql" || "MariaDB" || "mongoDB")) {return 110} else return 0}))
-			.attr("height", (function(d:any) {if (d.name == ("mysql" || "sql" || "MariaDB" || "mongoDB")) {return 185} else return 0}));
+			.attr("width", (function(d:any) {if (d.name == ("mysql" || "sql" || "MariaDB" || "mongoDB")) {return 20} else return 0}))
+			.attr("height", (function(d:any) {if (d.name == ("mysql" || "sql" || "MariaDB" || "mongoDB")) {return 30} else return 0}));
 
 		node.append("image")
 			.attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85262153-0c140280-b476-11ea-955a-8fb3173167b9.jpg")
 			.attr("x", -18)
 			.attr("y", -18)
-			.attr("width", (function(d:any) {if (d.name == ("redis" || "kafka" || "rabbitMQ")) {return 90} else return 0}))
-			.attr("height", (function(d:any) {if (d.name == ("redis" || "kafka" || "rabbitMQ")) {return 30} else return 0}));
+			.attr("width", (function(d:any) {if (d.name == ("redis" || "kafka" || "rabbitMQ")) {return 37} else return 0}))
+			.attr("height", (function(d:any) {if (d.name == ("redis" || "kafka" || "rabbitMQ")) {return 37} else return 0}));
 			   
+		
+		node.append("image")
+			.attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85266536-a5deae00-b47c-11ea-80e6-32ed869dbd31.png")
+			.attr("x", -20)
+			.attr("y", -20)
+			.attr("width", (function(d:any) {if (msg_bus.indexOf(d.name) < 0) {return 40} else return 0}))
+			.attr("height", (function(d:any) {if (db.indexOf(d.name) < 0) {return 40} else return 0}));
+
 		//node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3)
-		node.append("path")
+		/*node.append("path")
 		  .attr("stroke-width", 3)
 		  .attr("stroke", "green")
 		  .attr("d", (function(d:any,i:any) { return arc0({startAngle:0, endAngle:(Math.PI)*2}); }))
-		 
+		 */
 		 
 		//node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white")
 		node.append("path")

@@ -9806,13 +9806,13 @@ function (_super) {
         });
       }
 
-      var d3, svg, dataset, width, height, force, svg, id, path, text_, node, svg, arc, arc2, arc3, arc4, arc0, _loop_1, i;
+      var d3, svg, dataset, width, height, force, svg, id, path, text_, node, svg, arc, arc2, arc3, arc4, msg_bus, db, _loop_1, i;
 
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         d3 = __webpack_require__(/*! ../d3js_modules/d3.v3.min.js */ "./tool-frontend/d3js_modules/d3.v3.min.js");
         svg = d3.select("#graph_legend"); // Draw legend
 
-        svg.append("circle").attr("cx", 50).attr("cy", 50).attr("r", 7).style("fill", "green").style("stroke-width", 0);
+        svg.append("circle").attr("cx", 50).attr("cy", 50).attr("r", 7).style("fill", "black").style("stroke-width", 0);
         svg.append("circle").attr("cx", 50).attr("cy", 70).attr("r", 7).style("fill", "red").style("stroke-width", 0);
         svg.append("circle").attr("cx", 50).attr("cy", 90).attr("r", 7).style("fill", "#CCCC00").style("stroke-width", 0);
         svg.append("circle").attr("cx", 50).attr("cy", 110).attr("r", 7).style("fill", "blue").style("stroke-width", 0);
@@ -9849,37 +9849,47 @@ function (_super) {
         text_ = svg.append("text").attr("x", 0).attr("dy", 0);
         node = svg.selectAll(".node").data(dataset.nodes).enter().append("g").attr("class", "node").call(force.drag);
         svg = d3.select("svg").append("g").attr("transform", "translate(150,75)");
-        arc = d3.svg.arc().innerRadius(25).outerRadius(25);
-        arc2 = d3.svg.arc().innerRadius(20).outerRadius(20);
-        arc3 = d3.svg.arc().innerRadius(15).outerRadius(15);
-        arc4 = d3.svg.arc().innerRadius(35).outerRadius(35);
-        arc0 = d3.svg.arc().innerRadius(30).outerRadius(30);
-        node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white");
+        arc = d3.svg.arc().innerRadius(33).outerRadius(33);
+        arc2 = d3.svg.arc().innerRadius(27).outerRadius(27);
+        arc3 = d3.svg.arc().innerRadius(21).outerRadius(21);
+        arc4 = d3.svg.arc().innerRadius(38).outerRadius(38);
+        msg_bus = ["redis", "kafka", "rabbitMQ"];
+        db = ["mysql", "sql", "MariaDB", "mongoDB"];
+        node.append("circle").attr("r", 30).style("stroke", "transparent").style("stroke-width", 3).style("fill", "white");
         node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85265523-0ff65380-b47b-11ea-9521-7bbcade80d11.png").attr("x", -10).attr("y", -15).attr("width", function (d) {
           if (d.name == ("mysql" || false || false || false)) {
-            return 110;
+            return 20;
           } else return 0;
         }).attr("height", function (d) {
           if (d.name == ("mysql" || false || false || false)) {
-            return 185;
+            return 30;
           } else return 0;
         });
         node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85262153-0c140280-b476-11ea-955a-8fb3173167b9.jpg").attr("x", -18).attr("y", -18).attr("width", function (d) {
           if (d.name == ("redis" || false || false)) {
-            return 90;
+            return 37;
           } else return 0;
         }).attr("height", function (d) {
           if (d.name == ("redis" || false || false)) {
-            return 30;
+            return 37;
+          } else return 0;
+        });
+        node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85266536-a5deae00-b47c-11ea-80e6-32ed869dbd31.png").attr("x", -20).attr("y", -20).attr("width", function (d) {
+          if (msg_bus.indexOf(d.name) < 0) {
+            return 40;
+          } else return 0;
+        }).attr("height", function (d) {
+          if (db.indexOf(d.name) < 0) {
+            return 40;
           } else return 0;
         }); //node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3)
 
-        node.append("path").attr("stroke-width", 3).attr("stroke", "green").attr("d", function (d, i) {
-          return arc0({
-            startAngle: 0,
-            endAngle: Math.PI * 2
-          });
-        }); //node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white")
+        /*node.append("path")
+          .attr("stroke-width", 3)
+          .attr("stroke", "green")
+          .attr("d", (function(d:any,i:any) { return arc0({startAngle:0, endAngle:(Math.PI)*2}); }))
+         */
+        //node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white")
 
         node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "#CCCC00").attr("d", function (d, i) {
           return arc3({

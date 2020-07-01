@@ -1,6 +1,6 @@
 {
   "id": "grafana-simple-json-backend-datasource",
-  "name": "Simple Json backend",
+  "name": "Jaeger backend datasource",
   "type": "datasource",
 
   "partials": {
