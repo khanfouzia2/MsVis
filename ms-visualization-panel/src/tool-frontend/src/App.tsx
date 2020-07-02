@@ -65,7 +65,9 @@ export class App extends PureComponent<Props> {
 	
 	async getDatasourceId (grafana_url: string, datasource_name: string) {
 		const url: string = grafana_url+'/api/datasources/name/'+datasource_name;
-		const api_token = "Bearer eyJrIjoiV0FSREtjbzlaSlM5VDJNQ09hcWgydjE3OE1velJCVUciLCJuIjoicHJvbWV0aGV1c19rZXkiLCJpZCI6MX0=";
+		//const api_token = "Bearer eyJrIjoiV0FSREtjbzlaSlM5VDJNQ09hcWgydjE3OE1velJCVUciLCJuIjoicHJvbWV0aGV1c19rZXkiLCJpZCI6MX0=";
+		const api_token = "Bearer eyJrIjoiUHdhSDNzWHpLbWM2eDJNM24yN1pkb05yMHE4bXhsSWIiLCJuIjoiZHNfa2V5IiwiaWQiOjF9";
+		
 		const headers = { 'Content-Type': 'application/json', 'Authorization': api_token }
 
 		const response = await fetch(url, {headers});
