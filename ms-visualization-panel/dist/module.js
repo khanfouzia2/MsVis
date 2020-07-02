@@ -61276,7 +61276,7 @@ function (_super) {
         switch (_a.label) {
           case 0:
             url = grafana_url + '/api/datasources/name/' + datasource_name;
-            api_token = "Bearer eyJrIjoiUHdhSDNzWHpLbWM2eDJNM24yN1pkb05yMHE4bXhsSWIiLCJuIjoiZHNfa2V5IiwiaWQiOjF9";
+            api_token = "Bearer eyJrIjoiSExRaDJCaEtURWVPRWl0cWg3QUh0M0hFSFQ2OFRCTU8iLCJuIjoiZHNfa2V5IiwiaWQiOjF9";
             headers = {
               'Content-Type': 'application/json',
               'Authorization': api_token
