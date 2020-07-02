@@ -7,7 +7,7 @@ import (
 )
 
 var pluginLogger = hclog.New(&hclog.LoggerOptions{
-	Name:  "simple-json-backend-datasource",
+	Name:  "Jaeger backend datasource",
 	Level: hclog.LevelFromString("DEBUG"),
 })
 

@@ -1,5 +1,5 @@
 {
-  "name": "grafana-simple-json-backend-datasource",
+  "name": "Jaeger-backend-datasource",
   "version": "1.0.0",
   "description": "Simple JSON Datasource (backend version)",
   "private": true,
