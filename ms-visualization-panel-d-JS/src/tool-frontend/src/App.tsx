@@ -312,7 +312,7 @@ export class App extends PureComponent<Props> {
 		const url: string = grafana_url+'/api/datasources/name/'+datasource_name;
 		//const api_token = "Bearer eyJrIjoiQXNmeGFPWmxJVGJuZDV3NHhCV0trYmZvN01ZVWZwdlQiLCJuIjoicHJvbWV0aGV1c0tleSIsImlkIjoxfQ==";
 		//const api_token = "Bearer eyJrIjoiV0FSREtjbzlaSlM5VDJNQ09hcWgydjE3OE1velJCVUciLCJuIjoicHJvbWV0aGV1c19rZXkiLCJpZCI6MX0=";
-		const api_token = "Bearer eyJrIjoiSExRaDJCaEtURWVPRWl0cWg3QUh0M0hFSFQ2OFRCTU8iLCJuIjoiZHNfa2V5IiwiaWQiOjF9";
+		const api_token = "Bearer eyJrIjoiTTBIRkRvb01lWmt5NnlCZmZ2SkhCNk14bk1JQ3RzVjIiLCJuIjoiZHNLZXkiLCJpZCI6MX0=";
 		
 		const headers = { 'Content-Type': 'application/json', 'Authorization': api_token }
 
