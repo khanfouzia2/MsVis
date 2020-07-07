@@ -68,7 +68,7 @@ export class App extends PureComponent<Props> {
 		//const api_token = "Bearer eyJrIjoiV0FSREtjbzlaSlM5VDJNQ09hcWgydjE3OE1velJCVUciLCJuIjoicHJvbWV0aGV1c19rZXkiLCJpZCI6MX0=";
 		const api_token = "Bearer eyJrIjoiTTBIRkRvb01lWmt5NnlCZmZ2SkhCNk14bk1JQ3RzVjIiLCJuIjoiZHNLZXkiLCJpZCI6MX0=";
 		
-		const headers = { 'Content-Type': 'application/json', 'Authorization': api_token }
+		const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': api_token }
 
 		const response = await fetch(url, {headers});
 		console.log("New json response");
