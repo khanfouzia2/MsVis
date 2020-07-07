@@ -61280,7 +61280,8 @@ function (_super) {
             headers = {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': api_token
+              'Authorization': api_token,
+              'Access-Control-Allow-Origin': 'http://130.230.52.202'
             };
             return [4
             /*yield*/
