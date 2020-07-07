@@ -10113,7 +10113,7 @@ function (_super) {
         switch (_a.label) {
           case 0:
             console.log("Inside getSQLData() FUNCTION");
-            grafana_url = 'http://localhost:3000';
+            grafana_url = 'http://130.230.52.202:80';
             url = grafana_url + '/api/tsdb/query';
             datasource_name = "MySQL";
             return [4

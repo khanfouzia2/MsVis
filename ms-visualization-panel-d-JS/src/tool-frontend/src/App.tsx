@@ -392,7 +392,8 @@ export class App extends PureComponent<Props> {
 	
 	async getSQLData(){
 		console.log("Inside getSQLData() FUNCTION");
-		var grafana_url = 'http://localhost:3000';
+		//var grafana_url = 'http://localhost:3000';
+		var grafana_url = 'http://130.230.52.202:80';
 		//var datasource_name = 'MySQL';
 		//var metrics_data:string[][] = [];
 		//const response = await this.getDatasourceId(grafana_url, datasource_name);
