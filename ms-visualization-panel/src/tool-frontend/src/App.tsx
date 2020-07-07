@@ -86,7 +86,8 @@ export class App extends PureComponent<Props> {
 	}
 	
 	async getPrometheusMetrics() {
-		var grafana_url = 'http://localhost:3000';
+		//var grafana_url = 'http://localhost:3000';
+		var grafana_url = 'http://130.230.52.202';
 		var datasource_name = 'Prometheus';
 			
 		//var metrics_data = [] :any[];

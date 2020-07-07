@@ -61350,7 +61350,7 @@ function (_super) {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         switch (_a.label) {
           case 0:
-            grafana_url = 'http://localhost:3000';
+            grafana_url = 'http://130.230.52.202';
             datasource_name = 'Prometheus';
             metrics_data = [];
             return [4
