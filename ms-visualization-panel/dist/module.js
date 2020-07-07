@@ -61275,7 +61275,7 @@ function (_super) {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         switch (_a.label) {
           case 0:
-            url = grafana_url + '/api/datasources/name/' + datasource_name;
+            url = 'http://130.230.52.202/' + grafana_url + '/api/datasources/name/' + datasource_name;
             api_token = "Bearer eyJrIjoiTTBIRkRvb01lWmt5NnlCZmZ2SkhCNk14bk1JQ3RzVjIiLCJuIjoiZHNLZXkiLCJpZCI6MX0=";
             headers = {
               'Accept': 'application/json',
