@@ -61278,12 +61278,16 @@ function (_super) {
             url = grafana_url + '/api/datasources/name/' + datasource_name;
             api_token = "Bearer eyJrIjoiV0FSREtjbzlaSlM5VDJNQ09hcWgydjE3OE1velJCVUciLCJuIjoicHJvbWV0aGV1c19rZXkiLCJpZCI6MX0=";
             headers = {
+              'Accept': 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': api_token
+              'Authorization': api_token,
+              'Access-Control-Allow-Origin': 'http://130.230.52.202'
             };
             return [4
             /*yield*/
             , fetch(url, {
+              mode: 'no-cors',
+              method: "GET",
               headers: headers
             })];
 

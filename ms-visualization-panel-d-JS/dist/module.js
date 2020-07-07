@@ -9968,11 +9968,14 @@ function (_super) {
             return [4
             /*yield*/
             , fetch(url, {
+              mode: 'no-cors',
+              method: "GET",
               headers: headers
             })];
 
           case 1:
-            response = _a.sent();
+            response = _a.sent(); //const response = await fetch(url, {headers});
+
             console.log("New json response");
 
             if (response.status == 200 && response.statusText == "OK") {
