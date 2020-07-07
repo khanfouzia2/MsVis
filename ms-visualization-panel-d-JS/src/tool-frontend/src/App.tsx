@@ -67,19 +67,6 @@ export class App extends PureComponent<Props> {
 		var d3 = require('../d3js_modules/d3.v3.min.js');
 		
 		// select the svg area for graph's legend
-		var svg = d3.select("#graph_legend")
-
-		// Draw legend
-		svg.append("circle").attr("cx",50).attr("cy",50).attr("r", 7).style("fill", "black").style("stroke-width", 0)
-		svg.append("circle").attr("cx",50).attr("cy",70).attr("r", 7).style("fill", "red").style("stroke-width", 0)
-		svg.append("circle").attr("cx",50).attr("cy",90).attr("r", 7).style("fill", "#CCCC00").style("stroke-width", 0)
-		svg.append("circle").attr("cx",50).attr("cy",110).attr("r", 7).style("fill", "blue").style("stroke-width", 0)
-		svg.append("circle").attr("cx",50).attr("cy",130).attr("r", 7).style("fill", "brown").style("stroke-width", 0)
-		svg.append("text").attr("x", 70).attr("y", 50).text("Microservice").style("font-size", "12px").attr("alignment-baseline","middle")
-		svg.append("text").attr("x", 70).attr("y", 70).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline","middle")
-		svg.append("text").attr("x", 70).attr("y", 90).text("Effort spent").style("font-size", "12px").attr("alignment-baseline","middle")
-		svg.append("text").attr("x", 70).attr("y", 110).text("Issues closed").style("font-size", "12px").attr("alignment-baseline","middle")
-		svg.append("text").attr("x", 70).attr("y", 130).text("Revenue to cost ratio").style("font-size", "12px").attr("alignment-baseline","middle")
 		/*var dataset = {
 			nodes: [
 			{name1: "frontend", effort: 1, open_issues: 20, closed_issues: 30, open_bugs: 50, closed_bugs: 69, cost: 5000, revenue: 9800},
@@ -104,10 +91,35 @@ export class App extends PureComponent<Props> {
 		console.log(dataset);
 		console.log(dataset.links[0]);
 		console.log(dataset.links[0].calls);
+		console.log((dataset.links[0]).length);
+		
 		//var business_metrics = [["frontend",10,13,30,15,31,13,27],["customer",11,14,35,18,41,9,19],["route",21,24,45,58,41,19,99], ["mysql", 2, 4, 5, 2, 5, 2, 9], ["redis", 33, 19, 44, 66, 22, 77, 90], ["driver", 22, 23, 25, 26 ,26, 19, 50]];
 
 		//d3.csv("force.csv", function(error, links) {
 
+		if (dataset.links != null)
+		{
+			var svg = d3.select("#graph_legend")
+
+			// Draw legend
+			svg.append("rect").attr("x",10).attr("y",20).attr("width", 15).attr("height", 10).style("fill", "red").style("stroke-width", 0)		
+			svg.append("rect").attr("x",25).attr("y",20).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
+			svg.append("rect").attr("x",10).attr("y",40).attr("width", 15).attr("height", 10).style("fill", "brown").style("stroke-width", 0)	
+			svg.append("rect").attr("x",25).attr("y",40).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
+			svg.append("rect").attr("x",10).attr("y",60).attr("width", 15).attr("height", 10).style("fill", "blue").style("stroke-width", 0)	
+			svg.append("rect").attr("x",25).attr("y",60).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
+			svg.append("rect").attr("x",10).attr("y",80).attr("width", 15).attr("height", 10).style("fill", "#CCCC00").style("stroke-width", 0)
+
+			//svg.append("text").attr("x", 70).attr("y", 50).text("Microservice").style("font-size", "12px").attr("alignment-baseline","middle")
+			svg.append("text").attr("x", 50).attr("y", 24).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline","middle")
+			svg.append("text").attr("x", 120).attr("y", 24).text("- Open bugs").style("font-size", "12px").attr("alignment-baseline","middle")
+			svg.append("text").attr("x", 50).attr("y", 44).text("Closed issues").style("font-size", "12px").attr("alignment-baseline","middle")
+			svg.append("text").attr("x", 130).attr("y", 44).text("- Open issues").style("font-size", "12px").attr("alignment-baseline","middle")
+			svg.append("text").attr("x", 50).attr("y", 64).text("Revenue").style("font-size", "12px").attr("alignment-baseline","middle")
+			svg.append("text").attr("x", 100).attr("y", 64).text("- Cost").style("font-size", "12px").attr("alignment-baseline","middle")
+			svg.append("text").attr("x", 52).attr("y", 84).text("Effort Comparison").style("font-size", "12px").attr("alignment-baseline","middle")
+			
+		}
 		var width = 1200,
 			height = 570;
 
@@ -198,7 +210,7 @@ export class App extends PureComponent<Props> {
 		var msg_bus = ["redis", "kafka", "rabbitMQ"];
 		var db = ["mysql", "sql", "MariaDB", "mongoDB"];
 
-		node.append("circle").attr("r", 30).style("stroke", "transparent").style("stroke-width", 3).style("fill", "white")
+		node.append("circle").attr("r", 30).attr("stroke", "transparent").attr("stroke-width", 3).style("fill", "none")
 
 		node.append("image")
 			.attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85265523-0ff65380-b47b-11ea-9521-7bbcade80d11.png")
@@ -208,7 +220,7 @@ export class App extends PureComponent<Props> {
 			.attr("height", (function(d:any) {if (d.name == ("mysql" || "sql" || "MariaDB" || "mongoDB")) {return 30} else return 0}));
 
 		node.append("image")
-			.attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85262153-0c140280-b476-11ea-955a-8fb3173167b9.jpg")
+			.attr("xlink:href", "https://user-images.githubusercontent.com/34706505/86853657-9a67c580-c0bf-11ea-9dcc-fa74df77b03b.jpg")
 			.attr("x", -18)
 			.attr("y", -18)
 			.attr("width", (function(d:any) {if (d.name == ("redis" || "kafka" || "rabbitMQ")) {return 37} else return 0}))
@@ -217,10 +229,10 @@ export class App extends PureComponent<Props> {
 		
 		node.append("image")
 			.attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85266536-a5deae00-b47c-11ea-80e6-32ed869dbd31.png")
-			.attr("x", -20)
-			.attr("y", -20)
-			.attr("width", (function(d:any) {if (msg_bus.indexOf(d.name) < 0) {return 40} else return 0}))
-			.attr("height", (function(d:any) {if (db.indexOf(d.name) < 0) {return 40} else return 0}));
+			.attr("x", -12)
+			.attr("y", -12)
+			.attr("width", (function(d:any) {if (msg_bus.indexOf(d.name) < 0) {return 25} else return 0}))
+			.attr("height", (function(d:any) {if (db.indexOf(d.name) < 0) {return 25} else return 0}));
 
 		//node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3)
 		/*node.append("path")
@@ -246,13 +258,13 @@ export class App extends PureComponent<Props> {
 		node.append("path")
 		  .attr("fill", "none")
 		  .attr("stroke-width", 3)
-		  .attr("stroke", "brown")
+		  .attr("stroke", "blue")
 		  .attr("d", (function(d:any,i:any) { return arc4({startAngle:0, endAngle:(Math.PI)*d.cost_to_revenue}); }))
 
 		node.append("path")
 		  .attr("fill", "none")
 		  .attr("stroke-width", 3)
-		  .attr("stroke", "blue")
+		  .attr("stroke", "brown")
 		  .attr("d", (function(d:any,i:any) { return arc({startAngle:0, endAngle:(Math.PI)*d.open_to_closed_issues}); }))
 
 		// add the text

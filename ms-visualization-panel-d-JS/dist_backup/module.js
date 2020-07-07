@@ -9806,22 +9806,10 @@ function (_super) {
         });
       }
 
-      var d3, svg, dataset, width, height, force, svg, id, path, text_, node, svg, arc, arc2, arc3, arc4, msg_bus, db, _loop_1, i;
+      var d3, dataset, svg, width, height, force, svg, id, path, text_, node, svg, arc, arc2, arc3, arc4, msg_bus, db, _loop_1, i;
 
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         d3 = __webpack_require__(/*! ../d3js_modules/d3.v3.min.js */ "./tool-frontend/d3js_modules/d3.v3.min.js");
-        svg = d3.select("#graph_legend"); // Draw legend
-
-        svg.append("circle").attr("cx", 50).attr("cy", 50).attr("r", 7).style("fill", "black").style("stroke-width", 0);
-        svg.append("circle").attr("cx", 50).attr("cy", 70).attr("r", 7).style("fill", "red").style("stroke-width", 0);
-        svg.append("circle").attr("cx", 50).attr("cy", 90).attr("r", 7).style("fill", "#CCCC00").style("stroke-width", 0);
-        svg.append("circle").attr("cx", 50).attr("cy", 110).attr("r", 7).style("fill", "blue").style("stroke-width", 0);
-        svg.append("circle").attr("cx", 50).attr("cy", 130).attr("r", 7).style("fill", "brown").style("stroke-width", 0);
-        svg.append("text").attr("x", 70).attr("y", 50).text("Microservice").style("font-size", "12px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 70).attr("y", 70).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 70).attr("y", 90).text("Effort spent").style("font-size", "12px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 70).attr("y", 110).text("Issues closed").style("font-size", "12px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 70).attr("y", 130).text("Revenue to cost ratio").style("font-size", "12px").attr("alignment-baseline", "middle");
         dataset = {
           nodes: metrics_data[0],
           links: metrics_data[1]
@@ -9830,6 +9818,29 @@ function (_super) {
         console.log(dataset);
         console.log(dataset.links[0]);
         console.log(dataset.links[0].calls);
+        console.log(dataset.links[0].length); //var business_metrics = [["frontend",10,13,30,15,31,13,27],["customer",11,14,35,18,41,9,19],["route",21,24,45,58,41,19,99], ["mysql", 2, 4, 5, 2, 5, 2, 9], ["redis", 33, 19, 44, 66, 22, 77, 90], ["driver", 22, 23, 25, 26 ,26, 19, 50]];
+        //d3.csv("force.csv", function(error, links) {
+
+        if (dataset.links[0].length > 0) {
+          svg = d3.select("#graph_legend"); // Draw legend
+
+          svg.append("rect").attr("x", 10).attr("y", 20).attr("width", 15).attr("height", 10).style("fill", "red").style("stroke-width", 0);
+          svg.append("rect").attr("x", 25).attr("y", 20).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0);
+          svg.append("rect").attr("x", 10).attr("y", 40).attr("width", 15).attr("height", 10).style("fill", "brown").style("stroke-width", 0);
+          svg.append("rect").attr("x", 25).attr("y", 40).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0);
+          svg.append("rect").attr("x", 10).attr("y", 60).attr("width", 15).attr("height", 10).style("fill", "blue").style("stroke-width", 0);
+          svg.append("rect").attr("x", 25).attr("y", 60).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0);
+          svg.append("rect").attr("x", 10).attr("y", 80).attr("width", 15).attr("height", 10).style("fill", "#CCCC00").style("stroke-width", 0); //svg.append("text").attr("x", 70).attr("y", 50).text("Microservice").style("font-size", "12px").attr("alignment-baseline","middle")
+
+          svg.append("text").attr("x", 50).attr("y", 24).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline", "middle");
+          svg.append("text").attr("x", 120).attr("y", 24).text("- Open bugs").style("font-size", "12px").attr("alignment-baseline", "middle");
+          svg.append("text").attr("x", 50).attr("y", 44).text("Closed issues").style("font-size", "12px").attr("alignment-baseline", "middle");
+          svg.append("text").attr("x", 130).attr("y", 44).text("- Open issues").style("font-size", "12px").attr("alignment-baseline", "middle");
+          svg.append("text").attr("x", 50).attr("y", 64).text("Revenue").style("font-size", "12px").attr("alignment-baseline", "middle");
+          svg.append("text").attr("x", 100).attr("y", 64).text("- Cost").style("font-size", "12px").attr("alignment-baseline", "middle");
+          svg.append("text").attr("x", 52).attr("y", 84).text("Effort Comparison").style("font-size", "12px").attr("alignment-baseline", "middle");
+        }
+
         width = 1200, height = 570;
         force = d3.layout.force().nodes(d3.values(dataset.nodes)).links(dataset.links).size([width, height]).linkDistance(170).charge(-900).on("tick", tick).start();
         svg = d3.select("#mynetwork").append("svg").attr("width", width).attr("height", height); // build the arrow.
@@ -9855,7 +9866,7 @@ function (_super) {
         arc4 = d3.svg.arc().innerRadius(38).outerRadius(38);
         msg_bus = ["redis", "kafka", "rabbitMQ"];
         db = ["mysql", "sql", "MariaDB", "mongoDB"];
-        node.append("circle").attr("r", 30).style("stroke", "transparent").style("stroke-width", 3).style("fill", "white");
+        node.append("circle").attr("r", 30).attr("stroke", "transparent").attr("stroke-width", 3).style("fill", "none");
         node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85265523-0ff65380-b47b-11ea-9521-7bbcade80d11.png").attr("x", -10).attr("y", -15).attr("width", function (d) {
           if (d.name == ("mysql" || false || false || false)) {
             return 20;
@@ -9874,13 +9885,13 @@ function (_super) {
             return 37;
           } else return 0;
         });
-        node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85266536-a5deae00-b47c-11ea-80e6-32ed869dbd31.png").attr("x", -20).attr("y", -20).attr("width", function (d) {
+        node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85266536-a5deae00-b47c-11ea-80e6-32ed869dbd31.png").attr("x", -12).attr("y", -12).attr("width", function (d) {
           if (msg_bus.indexOf(d.name) < 0) {
-            return 40;
+            return 25;
           } else return 0;
         }).attr("height", function (d) {
           if (db.indexOf(d.name) < 0) {
-            return 40;
+            return 25;
           } else return 0;
         }); //node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3)
 
@@ -9903,13 +9914,13 @@ function (_super) {
             endAngle: Math.PI * d.open_to_closed_bugs
           });
         });
-        node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "brown").attr("d", function (d, i) {
+        node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "blue").attr("d", function (d, i) {
           return arc4({
             startAngle: 0,
             endAngle: Math.PI * d.cost_to_revenue
           });
         });
-        node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "blue").attr("d", function (d, i) {
+        node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "brown").attr("d", function (d, i) {
           return arc({
             startAngle: 0,
             endAngle: Math.PI * d.open_to_closed_issues
@@ -9959,19 +9970,23 @@ function (_super) {
         switch (_a.label) {
           case 0:
             url = grafana_url + '/api/datasources/name/' + datasource_name;
-            api_token = "Bearer eyJrIjoiV0FSREtjbzlaSlM5VDJNQ09hcWgydjE3OE1velJCVUciLCJuIjoicHJvbWV0aGV1c19rZXkiLCJpZCI6MX0=";
+            api_token = "Bearer eyJrIjoiTTBIRkRvb01lWmt5NnlCZmZ2SkhCNk14bk1JQ3RzVjIiLCJuIjoiZHNLZXkiLCJpZCI6MX0=";
             headers = {
+              'Accept': 'application/json',
               'Content-Type': 'application/json',
               'Authorization': api_token
             };
             return [4
             /*yield*/
             , fetch(url, {
+              mode: 'no-cors',
+              method: "GET",
               headers: headers
             })];
 
           case 1:
-            response = _a.sent();
+            response = _a.sent(); //const response = await fetch(url, {headers});
+
             console.log("New json response");
 
             if (response.status == 200 && response.statusText == "OK") {

@@ -9876,7 +9876,7 @@ function (_super) {
             return 30;
           } else return 0;
         });
-        node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/86853657-9a67c580-c0bf-11ea-9dcc-fa74df77b03b.jpg").attr("x", -18).attr("y", -18).attr("width", function (d) {
+        node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/86850717-735ac500-c0ba-11ea-930e-57426091f2d0.jpg").attr("x", -18).attr("y", -18).attr("width", function (d) {
           if (d.name == ("redis" || false || false)) {
             return 37;
           } else return 0;
@@ -10044,7 +10044,7 @@ function (_super) {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         switch (_a.label) {
           case 0:
-            grafana_url = 'http://130.230.52.202';
+            grafana_url = 'http://localhost:3000';
             datasource_name = 'Prometheus';
             metrics_data = [];
             return [4
@@ -10124,7 +10124,7 @@ function (_super) {
         switch (_a.label) {
           case 0:
             console.log("Inside getSQLData() FUNCTION");
-            grafana_url = 'http://130.230.52.202:80';
+            grafana_url = 'http://localhost:3000';
             url = grafana_url + '/api/tsdb/query';
             datasource_name = "MySQL";
             return [4
