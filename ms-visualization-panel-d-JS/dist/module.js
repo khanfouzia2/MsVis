@@ -10217,8 +10217,7 @@ function (_super) {
 
   App.prototype.render = function () {
     var legend_style = {
-      cssFloat: 'left',
-      borderStyle: 'solid'
+      cssFloat: 'left'
     };
     var mynetwork_style = {
       "height": "150px",
@@ -10317,7 +10316,7 @@ function getNetworkData(data, data_, data__) {
       for (var i = 1; i < len(businessMetrics) - 1; ++i) {
         if (businessMetrics[i][7] != null) {
           if (businessMetrics[i][7] < min_effort) min_effort = businessMetrics[i][7];
-          if (businessMetrics[i][7] > max_effort) min_effort = businessMetrics[i][7];
+          if (businessMetrics[i][7] > max_effort) max_effort = businessMetrics[i][7];
         }
       }
 

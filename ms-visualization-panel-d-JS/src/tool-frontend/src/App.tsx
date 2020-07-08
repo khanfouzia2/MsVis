@@ -453,7 +453,7 @@ export class App extends PureComponent<Props> {
 	}
 	
   render() {
-	var legend_style = { cssFloat:'left', borderStyle:'solid' } as React.CSSProperties;
+	var legend_style = { cssFloat:'left' } as React.CSSProperties;
 	var mynetwork_style = {"height":"150px", "width":"200px", cssFloat:'right'} as React.CSSProperties;
     //var mynetwork_style = { float:'left', border-style:'solid', height:'150px', width:'200px' } as React.CSSProperties;
 /*	var legend_style = {

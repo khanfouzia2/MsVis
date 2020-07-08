@@ -53,7 +53,7 @@ export function getNetworkData (data: any[], data_: any[], data__: any[]) : any[
 					if (businessMetrics[i][7] < min_effort)
 						min_effort = businessMetrics[i][7];
 					if (businessMetrics[i][7] > max_effort)
-						min_effort = businessMetrics[i][7];
+						max_effort = businessMetrics[i][7];
 				}
 			}
 			console.log("printing min and max effort value");

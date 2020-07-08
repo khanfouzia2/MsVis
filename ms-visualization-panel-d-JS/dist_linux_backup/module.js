@@ -9821,7 +9821,7 @@ function (_super) {
         console.log(dataset.links[0].length); //var business_metrics = [["frontend",10,13,30,15,31,13,27],["customer",11,14,35,18,41,9,19],["route",21,24,45,58,41,19,99], ["mysql", 2, 4, 5, 2, 5, 2, 9], ["redis", 33, 19, 44, 66, 22, 77, 90], ["driver", 22, 23, 25, 26 ,26, 19, 50]];
         //d3.csv("force.csv", function(error, links) {
 
-        if (dataset.links[0].length > 0) {
+        if (dataset.links != null) {
           svg = d3.select("#graph_legend"); // Draw legend
 
           svg.append("rect").attr("x", 10).attr("y", 20).attr("width", 15).attr("height", 10).style("fill", "red").style("stroke-width", 0);
@@ -9876,7 +9876,7 @@ function (_super) {
             return 30;
           } else return 0;
         });
-        node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85262153-0c140280-b476-11ea-955a-8fb3173167b9.jpg").attr("x", -18).attr("y", -18).attr("width", function (d) {
+        node.append("image").attr("xlink:href", "https://user-images.githubusercontent.com/34706505/86853657-9a67c580-c0bf-11ea-9dcc-fa74df77b03b.jpg").attr("x", -18).attr("y", -18).attr("width", function (d) {
           if (d.name == ("redis" || false || false)) {
             return 37;
           } else return 0;
@@ -10044,7 +10044,7 @@ function (_super) {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         switch (_a.label) {
           case 0:
-            grafana_url = 'http://localhost:3000';
+            grafana_url = 'http://130.230.52.202';
             datasource_name = 'Prometheus';
             metrics_data = [];
             return [4
@@ -10124,7 +10124,7 @@ function (_super) {
         switch (_a.label) {
           case 0:
             console.log("Inside getSQLData() FUNCTION");
-            grafana_url = 'http://localhost:3000';
+            grafana_url = 'http://130.230.52.202:80';
             url = grafana_url + '/api/tsdb/query';
             datasource_name = "MySQL";
             return [4
