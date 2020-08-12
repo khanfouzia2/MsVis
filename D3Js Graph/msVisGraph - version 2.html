@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<!--script src="https://d3js.org/d3.v4.js"></script-->
+<!--script src="https://d3js.org/d3.v3.js"></script-->
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+<style>
+
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+circle {
+  fill: white;
+  stroke: green;
+  stroke-width: 3px;
+  
+}
+
+text {
+  fill: #000;
+  font: 12px sans-serif;
+  pointer-events: none;
+}
+
+</style>
+
+
+<body>
+
+	<!--div float="left" style="float:left;height:150px;width:200px;border-style:solid;">
+	  <svg id="graph_legend" ></svg>
+	</div-->
+
+<div id="mynetwork" className="Graph" style="border-style:solid;float:left">
+		<p><b>Microservices Call Dependency Graph</b></p>
+		<div style="float:right;border-style:solid;height:150px;width:200px"><svg id="graph_legend" ></svg></div>
+</div>
+
+<script>
+// select the svg area
+var svg = d3.select("#graph_legend")
+
+// Handmade legend
+svg.append("circle").attr("cx",50).attr("cy",50).attr("r", 7).style("fill", "black").style("stroke-width", 0)
+		svg.append("circle").attr("cx",50).attr("cy",70).attr("r", 7).style("fill", "red").style("stroke-width", 0)
+		svg.append("circle").attr("cx",50).attr("cy",90).attr("r", 7).style("fill", "#CCCC00").style("stroke-width", 0)
+		svg.append("circle").attr("cx",50).attr("cy",110).attr("r", 7).style("fill", "blue").style("stroke-width", 0)
+		svg.append("circle").attr("cx",50).attr("cy",130).attr("r", 7).style("fill", "brown").style("stroke-width", 0)
+		svg.append("text").attr("x", 70).attr("y", 50).text("Microservice").style("font-size", "12px").attr("alignment-baseline","middle")
+		svg.append("text").attr("x", 70).attr("y", 70).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline","middle")
+		svg.append("text").attr("x", 70).attr("y", 90).text("Effort spent").style("font-size", "12px").attr("alignment-baseline","middle")
+		svg.append("text").attr("x", 70).attr("y", 110).text("Issues closed").style("font-size", "12px").attr("alignment-baseline","middle")
+		svg.append("text").attr("x", 70).attr("y", 130).text("Revenue to cost ratio").style("font-size", "12px").attr("alignment-baseline","middle")
+		
+</script>
+
+
+<script>
+// get the data
+
+var dataset = {
+
+    nodes: [
+    {name1: "frontend", effort: 1, open_issues: 20, closed_issues: 30, open_bugs: 50, closed_bugs: 69, cost: 5000, revenue: 9800, w: 0, h:0},
+    {name1: "customer", effort: 1.5, open_issues: 90, closed_issues: 33, open_bugs: 10, closed_bugs: 49, cost: 4000, revenue: 6000, w: 0, h:0},
+    {name1: "route", effort: 1.25, open_issues: 70, closed_issues: 20, open_bugs: 40, closed_bugs: 33, cost: 9900, revenue: 50000, w: 0, h:0},
+    {name1: "mysql", effort: 1.75, open_issues: 20, closed_issues: 30, open_bugs: 60, closed_bugs: 12, cost: 700, revenue: 55000, w: 1, h:1},
+    {name1: "redis", effort: 2, open_issues: 10, closed_issues: 70, open_bugs: 70, closed_bugs: 66, cost: 400, revenue: 2000, w: 0, h:0},
+    {name1: "driver", effort: 0.75, open_issues: 50, closed_issues: 60, open_bugs: 80, closed_bugs: 44, cost: 6600, revenue: 1000, w: 0, h:0}
+    ],
+    links: [
+    {source: 5, target: 4, call: "1"},
+    {source: 1, target: 3, call: "1"},
+    {source: 0, target: 5, call: "3"},
+    {source: 0, target: 2, call: "9"},
+    {source: 0, target: 1, call: "1"}
+    ]
+};
+	
+var data = [
+    {value: 60, label: "issues", color: '#ff0000'},
+    {value: 70, label: "revenue", color: '#00ff00'},
+    {value: 30, label: "bugs", color: '#0000ff'},
+    {value: 80, label: "effort", color: '#ffcd15'}, //ffff00-yellow
+    //{value: 90, label: "label_5", color: '#ff0099'}
+];
+
+business_metrics = [["frontend",10,13,30,15,31,13,27],["customer",11,14,35,18,41,9,19],["route",21,24,45,58,41,19,99], ["mysql", 2, 4, 5, 2, 5, 2, 9], ["redis", 33, 19, 44, 66, 22, 77, 90], ["driver", 22, 23, 25, 26 ,26, 19, 50]]
+	
+d3.csv("force.csv", function(error, links) {
+
+var width = 1100,
+    height = 550;
+
+var force = d3.layout.force()
+    .nodes(d3.values(dataset.nodes))
+    .links(dataset.links)
+    .size([width, height])
+    .linkDistance(180)
+    .charge(-900)
+    .on("tick", tick)
+    .start();
+
+//var svg = d3.select("body").append("svg")
+var svg = d3.select("#mynetwork").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+// build the arrow.
+svg.append("svg:defs").selectAll("marker")
+    .data(["end"])      // Different link/path types can be defined here
+  .enter().append("svg:marker")    // This section adds in the arrows
+    .attr("id", String)
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 35)
+    .attr("refY", -4)
+	.attr("markerUnits", "userSpaceOnUse")
+    .attr("markerWidth", 16)
+    .attr("markerHeight", 13)
+    .attr("orient", "auto")
+  .append("svg:path")
+    .attr("d", "M0,-5L10,0L0,5");
+
+var id = -1;
+// add the links and the arrows
+var path = svg.append("svg:g").selectAll("path")
+	//.style({ 'stroke': '#666', 'fill': 'none', 'stroke-width': '1.5px'})
+    .data(dataset.links)
+	.enter().append("svg:path")
+	.style("fill", "none")
+	.style("stroke", "#666")
+	.style("stroke-width", "1.5px")
+    .attr("marker-end", "url(#end)")
+	.style("stroke-width", function(d) { return ((d.call).toString() + "px"); })
+	.attr("id", (function(d) {console.log(id+1); id = id + 1; return id.toString();}));
+
+// Add a text label.
+var text_ = svg.append("text")
+    .attr("x", 0)
+    .attr("dy", 0)
+	
+//var id = 0;
+//svg.append("text").append("textPath").attr("xlink:href", function(d) { id = id + 1; console.log("#"+id.toString()); return "#"+id.toString();}).style("text-anchor", "middle").attr("startOffset", "50%").text("yayyy");
+// define the nodes
+var node = svg.selectAll(".node")
+    .data(dataset.nodes)
+  .enter().append("g")
+    .attr("class", "node")
+    .call(force.drag);
+
+//node.append("arc").attr("d", arc({startAngle:0, endAngle:(Math.PI/2)}))
+
+var svg = d3.select("svg")
+.append("g")
+.attr("transform", "translate(150,75)");
+
+var arc = d3.svg.arc()
+  .innerRadius(33)
+  .outerRadius(33);
+  
+var arc2 = d3.svg.arc()
+  .innerRadius(21)
+  .outerRadius(21);
+  
+var arc3 = d3.svg.arc()
+  .innerRadius(15)
+  .outerRadius(15);
+  
+var arc4 = d3.svg.arc()
+  .innerRadius(38)
+  .outerRadius(38);
+
+var arc0 = d3.svg.arc()
+  .innerRadius(30)
+  .outerRadius(30);
+
+var msg_bus = ["redis", "kafka", "rabbitMQ"];
+var db = ["mysql", "sql", "MariaDB", "mongoDB"];
+
+node.append("circle").attr("r", 30).style("stroke", "transparent").style("stroke-width", 3)
+
+node.append("image")
+    .attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85265523-0ff65380-b47b-11ea-9521-7bbcade80d11.png")
+    .attr("x", -10)
+    .attr("y", -15)
+    .attr("width", (function(d) {if (d.name1 == ("mysql" || "sql" || "MariaDB" || "mongoDB")) {return 20}  }))
+    .attr("height", (function(d) {if (d.name1 == ("mysql" || "sql" || "MariaDB" || "mongoDB")) {return 30} else return 0}));
+
+node.append("image")
+    .attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85262153-0c140280-b476-11ea-955a-8fb3173167b9.jpg")
+    .attr("x", -18)
+    .attr("y", -18)
+    .attr("width", (function(d) {if (d.name1 == ("redis" || "kafka" || "rabbitMQ")) {return 37} else return 0}))
+    .attr("height", (function(d) {if (d.name1 == ("redis" || "kafka" || "rabbitMQ")) {return 37} else return 0}));
+	   
+//node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3)
+/*node.append("path")
+  .attr("stroke-width", 3)
+  .attr("stroke", "green")
+  .attr("d", (function(d,i) { return arc0({startAngle:0, endAngle:(Math.PI)*2}); }))
+*/
+node.append("image")
+    .attr("xlink:href", "https://user-images.githubusercontent.com/34706505/85266536-a5deae00-b47c-11ea-80e6-32ed869dbd31.png")
+    .attr("x", -33)
+    .attr("y", -33)
+    .attr("width", (function(d) {if (msg_bus.indexOf(d.name1) < 0) {console.log("Test");console.log(msg_bus.indexOf(d.name1)); return 65} else return 0}))
+    .attr("height", (function(d) {if (db.indexOf(d.name1) < 0) {return 65} else return 0}));
+
+node.append("path")
+  //.attr("fill", "none")
+  .attr("stroke-width", 3)
+  .attr("stroke", "#CCCC00")
+  .attr("d", (function(d,i) { return arc3({startAngle:0, endAngle:(Math.PI)*d.effort}); }))
+	  
+node.append("path")
+  //.attr("fill", "none")
+  .attr("stroke-width", 3)
+  .attr("stroke", "red")
+  .attr("d", (function(d,i) { return arc2({startAngle:0, endAngle:(Math.PI)*d.effort}); }))
+
+
+node.append("path")
+  //.attr("fill", "none")
+  .attr("stroke-width", 3)
+  .attr("stroke", "brown")
+  .attr("d", (function(d,i) { return arc4({startAngle:0, endAngle:(Math.PI)*d.effort});}))
+  //.attr("d", (function(d,i) { if (name1 == "redis") return ()
+	//  }))
+
+
+node.append("path")
+  //.attr("fill", "none")
+  .attr("stroke-width", 3)
+  .attr("stroke", "blue")
+  .attr("d", (function(d,i) { return arc({startAngle:0, endAngle:(Math.PI)*d.effort}); }))
+
+
+
+// add the text
+node.append("text")
+      .text(function(d) {
+        return d.name1+" "+d.cost+"/ms"+" "+d.effort+"/m";
+      })
+      .attr('x', 10)
+      .attr('y', 3);
+
+for (let i=0; i<=id; i++){
+text_.append("textPath")
+    .attr("stroke","black")
+    .attr("xlink:href",(function(d) {return ("#"+i.toString())}))
+	.style("text-anchor","middle") //place the text halfway on the arc
+    .attr("startOffset", "50%")
+    .text((function (d) {console.log(dataset.links[i].call); return ((dataset.links[i].call).toString()+"calls")}))
+console.log(i);
+}
+/*node.append("title")
+      .text(function(d) { return d.name+d.revenue; });*/
+
+
+	
+// add the curvy lines
+function tick() {
+
+
+    path.attr("d", function(d) {
+        var dx = d.target.x - d.source.x,
+            dy = d.target.y - d.source.y,
+            dr = Math.sqrt(dx * dx + dy * dy);
+        return "M" + 
+            d.source.x + "," + 
+            d.source.y + "A" + 
+            dr + "," + dr + " 0 0,1 " + 
+            d.target.x + "," + 
+            d.target.y;
+    })
+	
+    node
+        .attr("transform", function(d) { 
+  	    return "translate(" + d.x + "," + d.y + ")"; });
+		
+}
+
+});
+
+
+</script>
+
+
+
+<!-- Load d3.js -->
+
+<!-- Create a div where the graph will take place -->
+
+
+
+
+</body>
+
+
+</html>
