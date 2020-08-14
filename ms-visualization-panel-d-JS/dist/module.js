@@ -86,6 +86,17 @@ define(["@grafana/data","@grafana/ui","react"], function(__WEBPACK_EXTERNAL_MODU
 /************************************************************************/
 /******/ ({
 
+/***/ "../../../../Documents/Thesis/msvis.json":
+/*!************************************************!*\
+  !*** /home/fouzia/Documents/Thesis/msvis.json ***!
+  \************************************************/
+/*! exports provided: grafana_url, api_key_admin, services_status_query_prometheus, services_responseTime_query_prometheus, services_LoadPerMin_query_prometheus, erviceName_col_name, closed_bugs_count_col_name, open_bugs_count_col_name, closed_issues_count_col_name, open_issues_count_col_name, services_revenue_col_name, services_cost_col_name, services_effort_col_name, show_bugs_ratio, show_issues_ratio, show_costToRevenue_ratio, show_relative_effort, default */
+/***/ (function(module) {
+
+module.exports = {"grafana_url":"http://localhost:3000","api_key_admin":"eyJrIjoiQU1pMzFaZXlTd0VsbkkwcGhTRnpGcnY3ZGNpb2JOdmEiLCJuIjoibXN2aXNLZXkiLCJpZCI6MX0=","services_status_query_prometheus":"up{job!='prometheus'}","services_responseTime_query_prometheus":"scrape_duration_seconds{job!='prometheus'}","services_LoadPerMin_query_prometheus":"scrape_samples_scraped{job!='prometheus'}","erviceName_col_name":"service_name","closed_bugs_count_col_name":"closed_bugs_count","open_bugs_count_col_name":"open_bugs_count","closed_issues_count_col_name":"closed_issues_count","open_issues_count_col_name":"open_issues_count","services_revenue_col_name":"revenue","services_cost_col_name":"cost","services_effort_col_name":"effort","show_bugs_ratio":0,"show_issues_ratio":1,"show_costToRevenue_ratio":0,"show_relative_effort":1};
+
+/***/ }),
+
 /***/ "../node_modules/tslib/tslib.es6.js":
 /*!******************************************!*\
   !*** ../node_modules/tslib/tslib.es6.js ***!
@@ -9480,235 +9491,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
 
 /***/ }),
 
-/***/ "./tool-frontend/node_modules/tslib/tslib.es6.js":
-/*!*******************************************************!*\
-  !*** ./tool-frontend/node_modules/tslib/tslib.es6.js ***!
-  \*******************************************************/
-/*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __exportStar, __values, __read, __spread, __spreadArrays, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__extends", function() { return __extends; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__assign", function() { return __assign; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__rest", function() { return __rest; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__decorate", function() { return __decorate; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__param", function() { return __param; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__metadata", function() { return __metadata; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__awaiter", function() { return __awaiter; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__generator", function() { return __generator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__exportStar", function() { return __exportStar; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__values", function() { return __values; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__read", function() { return __read; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spread", function() { return __spread; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spreadArrays", function() { return __spreadArrays; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__await", function() { return __await; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncGenerator", function() { return __asyncGenerator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncDelegator", function() { return __asyncDelegator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncValues", function() { return __asyncValues; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__makeTemplateObject", function() { return __makeTemplateObject; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importStar", function() { return __importStar; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importDefault", function() { return __importDefault; });
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
-
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
-
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
-***************************************************************************** */
-/* global Reflect, Promise */
-
-var extendStatics = function(d, b) {
-    extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return extendStatics(d, b);
-};
-
-function __extends(d, b) {
-    extendStatics(d, b);
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-}
-
-var __assign = function() {
-    __assign = Object.assign || function __assign(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-        }
-        return t;
-    }
-    return __assign.apply(this, arguments);
-}
-
-function __rest(s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-}
-
-function __decorate(decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-}
-
-function __param(paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-}
-
-function __metadata(metadataKey, metadataValue) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
-}
-
-function __awaiter(thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-}
-
-function __generator(thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-}
-
-function __exportStar(m, exports) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
-
-function __values(o) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
-    if (m) return m.call(o);
-    return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-}
-
-function __read(o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-}
-
-function __spread() {
-    for (var ar = [], i = 0; i < arguments.length; i++)
-        ar = ar.concat(__read(arguments[i]));
-    return ar;
-}
-
-function __spreadArrays() {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
-
-function __await(v) {
-    return this instanceof __await ? (this.v = v, this) : new __await(v);
-}
-
-function __asyncGenerator(thisArg, _arguments, generator) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var g = generator.apply(thisArg, _arguments || []), i, q = [];
-    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
-    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
-    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
-    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
-    function fulfill(value) { resume("next", value); }
-    function reject(value) { resume("throw", value); }
-    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
-}
-
-function __asyncDelegator(o) {
-    var i, p;
-    return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
-    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
-}
-
-function __asyncValues(o) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var m = o[Symbol.asyncIterator], i;
-    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
-    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
-    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
-}
-
-function __makeTemplateObject(cooked, raw) {
-    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
-    return cooked;
-};
-
-function __importStar(mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result.default = mod;
-    return result;
-}
-
-function __importDefault(mod) {
-    return (mod && mod.__esModule) ? mod : { default: mod };
-}
-
-
-/***/ }),
-
 /***/ "./tool-frontend/src/App.tsx":
 /*!***********************************!*\
   !*** ./tool-frontend/src/App.tsx ***!
@@ -9719,7 +9501,7 @@ function __importDefault(mod) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "App", function() { return App; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./tool-frontend/node_modules/tslib/tslib.es6.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _FormNetwork__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FormNetwork */ "./tool-frontend/src/FormNetwork.tsx");
@@ -9736,7 +9518,7 @@ function (_super) {
     return _super.call(this, props) || this;
   }
 
-  App.prototype.mergeMetricsData = function () {
+  App.prototype.mergeMetricsData = function (grafana_url, api_key, ms_status_query, ms_resTime_query, ms_load1m_query) {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
       var data, prometheus_metrics, business_metrics, result;
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
@@ -9754,7 +9536,7 @@ function (_super) {
           case 1:
             return [4
             /*yield*/
-            , this.getPrometheusMetrics()];
+            , this.getPrometheusMetrics(grafana_url, api_key, ms_status_query, ms_resTime_query, ms_load1m_query)];
 
           case 2:
             prometheus_metrics = _a.sent();
@@ -9762,7 +9544,7 @@ function (_super) {
             console.log(prometheus_metrics);
             return [4
             /*yield*/
-            , this.sortSQLData()];
+            , this.sortSQLData(grafana_url, api_key)];
 
           case 3:
             business_metrics = _a.sent();
@@ -9902,30 +9684,42 @@ function (_super) {
          */
         //node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white")
 
-        node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "#CCCC00").attr("d", function (d, i) {
-          return arc3({
-            startAngle: 0,
-            endAngle: Math.PI * d.effort_spent
+        if (App.show_effort == 1) {
+          node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "#CCCC00").attr("d", function (d, i) {
+            return arc3({
+              startAngle: 0,
+              endAngle: Math.PI * d.effort_spent
+            });
           });
-        });
-        node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "red").attr("d", function (d, i) {
-          return arc2({
-            startAngle: 0,
-            endAngle: Math.PI * d.open_to_closed_bugs
+        }
+
+        if (App.show_bugs) {
+          node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "red").attr("d", function (d, i) {
+            return arc2({
+              startAngle: 0,
+              endAngle: Math.PI * d.open_to_closed_bugs
+            });
           });
-        });
-        node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "blue").attr("d", function (d, i) {
-          return arc4({
-            startAngle: 0,
-            endAngle: Math.PI * d.cost_to_revenue
+        }
+
+        if (App.show_costRevenue) {
+          node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "blue").attr("d", function (d, i) {
+            return arc4({
+              startAngle: 0,
+              endAngle: Math.PI * d.cost_to_revenue
+            });
           });
-        });
-        node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "brown").attr("d", function (d, i) {
-          return arc({
-            startAngle: 0,
-            endAngle: Math.PI * d.open_to_closed_issues
+        }
+
+        if (App.show_issues) {
+          node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "brown").attr("d", function (d, i) {
+            return arc({
+              startAngle: 0,
+              endAngle: Math.PI * d.open_to_closed_issues
+            });
           });
-        }); // add the text
+        } // add the text
+
 
         node.append("text").text(function (d) {
           return d.name + " " + d.service_response_time + "/ms" + " " + d.service_load_1m + "/m";
@@ -9963,14 +9757,14 @@ function (_super) {
     });
   };
 
-  App.prototype.getDatasourceId = function (grafana_url, datasource_name) {
+  App.prototype.getDatasourceId = function (grafana_url, datasource_name, api_key) {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
       var url, api_token, headers, response;
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         switch (_a.label) {
           case 0:
             url = grafana_url + '/api/datasources/name/' + datasource_name;
-            api_token = "Bearer eyJrIjoiTTBIRkRvb01lWmt5NnlCZmZ2SkhCNk14bk1JQ3RzVjIiLCJuIjoiZHNLZXkiLCJpZCI6MX0=";
+            api_token = "Bearer " + api_key;
             headers = {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
@@ -10038,24 +9832,23 @@ function (_super) {
     });
   };
 
-  App.prototype.getPrometheusMetrics = function () {
+  App.prototype.getPrometheusMetrics = function (grafana_url, api_key, ms_status_query, ms_resTime_query, ms_load1m_query) {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
-      var grafana_url, datasource_name, metrics_data, response, DS_proxy_url, services_status, query, services_response_time, services_load_1m, i, arr;
+      var datasource_name, metrics_data, response, DS_proxy_url, services_status, services_response_time, services_load_1m, i, arr;
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         switch (_a.label) {
           case 0:
-            grafana_url = 'http://130.230.52.202';
             datasource_name = 'Prometheus';
             metrics_data = [];
             return [4
             /*yield*/
-            , this.getDatasourceId(grafana_url, datasource_name)];
+            , this.getDatasourceId(grafana_url, datasource_name, api_key)];
 
           case 1:
             response = _a.sent();
             console.log(response);
             console.log("response from datasource api");
-            DS_proxy_url = grafana_url + '/api/datasources/' + response.access + '/' + response.id.toString() + '/api/v1/query_range?query=up{job!="prometheus"}&start=' + Math.floor(Date.now() / 1000).toString() + '&end=' + Math.floor(Date.now() / 1000).toString() + '&step=30';
+            DS_proxy_url = grafana_url + '/api/datasources/' + response.access + '/' + response.id.toString() + '/api/v1/query_range?query=' + ms_status_query + '&start=' + Math.floor(Date.now() / 1000).toString() + '&end=' + Math.floor(Date.now() / 1000).toString() + '&step=30';
             return [4
             /*yield*/
             , this.runPrometheusQuery(DS_proxy_url)];
@@ -10064,9 +9857,9 @@ function (_super) {
             services_status = _a.sent();
             if (!(services_status.status == "success")) return [3
             /*break*/
-            , 5];
-            query = 'scrape_duration_seconds{job!="prometheus"}';
-            DS_proxy_url = grafana_url + '/api/datasources/' + response.access + '/' + response.id.toString() + '/api/v1/query_range?query=' + query + '&start=' + Math.floor(Date.now() / 1000).toString() + '&end=' + Math.floor(Date.now() / 1000).toString() + '&step=30';
+            , 5]; //var query = 'scrape_duration_seconds{job!="prometheus"}'
+
+            DS_proxy_url = grafana_url + '/api/datasources/' + response.access + '/' + response.id.toString() + '/api/v1/query_range?query=' + ms_resTime_query + '&start=' + Math.floor(Date.now() / 1000).toString() + '&end=' + Math.floor(Date.now() / 1000).toString() + '&step=30';
             console.log(DS_proxy_url);
             return [4
             /*yield*/
@@ -10076,9 +9869,9 @@ function (_super) {
             services_response_time = _a.sent();
             if (!(services_response_time.status == "success")) return [3
             /*break*/
-            , 5];
-            query = 'scrape_samples_scraped{job!="prometheus"}';
-            DS_proxy_url = grafana_url + '/api/datasources/' + response.access + '/' + response.id.toString() + '/api/v1/query_range?query=' + query + '&start=' + Math.floor(Date.now() / 1000).toString() + '&end=' + Math.floor(Date.now() / 1000).toString() + '&step=30';
+            , 5]; //query = 'scrape_samples_scraped{job!="prometheus"}'
+
+            DS_proxy_url = grafana_url + '/api/datasources/' + response.access + '/' + response.id.toString() + '/api/v1/query_range?query=' + ms_load1m_query + '&start=' + Math.floor(Date.now() / 1000).toString() + '&end=' + Math.floor(Date.now() / 1000).toString() + '&step=30';
             return [4
             /*yield*/
             , this.runPrometheusQuery(DS_proxy_url)];
@@ -10117,19 +9910,18 @@ function (_super) {
     });
   };
 
-  App.prototype.getSQLData = function () {
+  App.prototype.getSQLData = function (grafana_url, api_key) {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
-      var grafana_url, url, datasource_name, datasourceId, request_payload, res;
+      var url, datasource_name, datasourceId, request_payload, res;
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         switch (_a.label) {
           case 0:
             console.log("Inside getSQLData() FUNCTION");
-            grafana_url = 'http://130.230.52.202:80';
             url = grafana_url + '/api/tsdb/query';
             datasource_name = "MySQL";
             return [4
             /*yield*/
-            , this.getDatasourceId(grafana_url, datasource_name)];
+            , this.getDatasourceId(grafana_url, datasource_name, api_key)];
 
           case 1:
             datasourceId = _a.sent();
@@ -10180,7 +9972,7 @@ function (_super) {
     });
   };
 
-  App.prototype.sortSQLData = function () {
+  App.prototype.sortSQLData = function (grafana_url, api_key) {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
       var res;
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
@@ -10188,7 +9980,7 @@ function (_super) {
           case 0:
             return [4
             /*yield*/
-            , this.getSQLData()];
+            , this.getSQLData(grafana_url, api_key)];
 
           case 1:
             res = _a.sent();
@@ -10210,9 +10002,45 @@ function (_super) {
   };
 
   App.prototype.componentDidMount = function () {
+    /*const metricsData = (window as any).__INITIAL_DATA__;
+    type metricsData = {
+        service_name: string;
+        closed_bugs: string;
+        open_bugs: string;
+        closed_issues: string;
+        open_issues: string;
+        revenue: string;
+        cost: string;
+        effort: string;
+        show_bugs: number;
+        show_issues: number;
+        show_costRevenue: number;
+        //show_effort: number;
+    };*/
     //this.sortSQLData();
     //this.getPrometheusMetrics();
-    this.mergeMetricsData();
+    var config = __webpack_require__(/*! /home/fouzia/Documents/Thesis/msvis.json */ "../../../../Documents/Thesis/msvis.json");
+
+    console.log(config);
+    var grafana_url = config['grafana_url'];
+    var api_key = config['api_key_admin'];
+    var ms_status_query = config['services_status_query_prometheus'];
+    var ms_resTime_query = config['services_responseTime_query_prometheus'];
+    var ms_load1m_query = config['services_responseTime_query_prometheus'];
+    App.service_name = config['erviceName_col_name'];
+    App.closed_bugs = config['closed_bugs_count_col_name'];
+    App.open_bugs = config['open_bugs_count_col_name'];
+    App.closed_issues = config['closed_issues_count_col_name'];
+    App.open_issues = config['open_issues_count_col_name'];
+    App.revenue = config['services_revenue_col_name'];
+    App.cost = config['services_cost_col_name'];
+    App.effort = config['services_effort_col_name'];
+    App.show_bugs = config['show_bugs_ratio'];
+    App.show_issues = config['show_issues_ratio'];
+    App.show_costRevenue = config['show_costToRevenue_ratio'];
+    App.show_effort = config['show_relative_effort'];
+    console.log(App.show_effort);
+    this.mergeMetricsData(grafana_url, api_key, ms_status_query, ms_resTime_query, ms_load1m_query);
   };
 
   App.prototype.render = function () {
@@ -10268,7 +10096,7 @@ function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getNetworkData", function() { return getNetworkData; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FormNetwork", function() { return FormNetwork; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./tool-frontend/node_modules/tslib/tslib.es6.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
 //import DataFrame from 'dataframe-js';
  //DO ADD THE CHECKS TO READ COLUMN VALUES FIRST/ also add checks before fetching parent, child or callCount data
 
@@ -10426,7 +10254,7 @@ function getNetworkData(data, data_, data__) {
         var label = uniqueNodes[i];
         if (metricsData.length > 0)
             label = uniqueNodes[i] + ", (" + metricsData[2] + "ms, " + metricsData[3] + "/m)";
-          if (dbs.includes(uniqueNodes[i].toLowerCase())){
+         if (dbs.includes(uniqueNodes[i].toLowerCase())){
             array_of_nodes.push({ 'id': uniqueNodes[i], 'label': label, 'shape': "database", 'color': "gray" , 'size': '20'});
         }
             else if (msg_bus.includes(uniqueNodes[i].toLowerCase())){
@@ -10435,14 +10263,14 @@ function getNetworkData(data, data_, data__) {
                 else {
                     array_of_nodes.push({ 'id': uniqueNodes[i], 'label': label })
                 }
-      }
+     }
     
     console.log("Array of graph nodes");
     console.log(array_of_nodes);
-      for (let i=0; i<(data[0].fields[0].values.length); ++i)
+     for (let i=0; i<(data[0].fields[0].values.length); ++i)
     {
         //const fontValuesDict : { [id: string]: fontValues} = { p1: {"align":"middle", "size":9, "face":"arial", "color":"black"}};
-          array_of_edges.push({
+         array_of_edges.push({
                 "from": parentNodes[i],
                 "to": childNodes[i],
                 "arrows": "to",

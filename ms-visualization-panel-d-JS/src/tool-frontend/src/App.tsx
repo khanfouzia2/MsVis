@@ -14,22 +14,35 @@ interface Props extends PanelProps<SimpleOptions> {}
 //const s = require('./style/App.css');
 export class App extends PureComponent<Props> {
 
+	static service_name: string;
+	static closed_bugs: number;
+	static open_bugs: number;
+	static closed_issues: number;
+	static open_issues: number;
+	static cost: number;
+	static revenue: number;
+	static effort: number;
+	static show_bugs: number;
+	static show_issues: number;
+	static show_costRevenue: number;
+	static show_effort: number;
+
 	constructor(props: Props){
 		super(props);
 	}
 	
-	async mergeMetricsData(){
+	async mergeMetricsData(grafana_url:string, api_key:string, ms_status_query:string, ms_resTime_query:string, ms_load1m_query:string){
 		const { data } = this.props;
 		console.log(data.series);
 		if (data.series.length < 1) {
 
 		}
 		else {
-			const prometheus_metrics = await this.getPrometheusMetrics();
+			const prometheus_metrics = await this.getPrometheusMetrics(grafana_url, api_key, ms_status_query, ms_resTime_query, ms_load1m_query);
 			console.log("Prometheus metrics_data inside drawGraph");
 			console.log(prometheus_metrics);
 			
-			const business_metrics = await this.sortSQLData();
+			const business_metrics = await this.sortSQLData(grafana_url, api_key);
 			console.log("Printing SQLData inside draw graph after prometheus metrics");
 			console.log(business_metrics);
 			
@@ -242,30 +255,38 @@ export class App extends PureComponent<Props> {
 		 */
 		 
 		//node.append("circle").attr("r", 30).style("stroke", "green").style("stroke-width", 3).style("fill", "white")
-		node.append("path")
-		  .attr("fill", "none")
-		  .attr("stroke-width", 3)
-		  .attr("stroke", "#CCCC00")
-		  .attr("d", (function(d:any,i:any) { return arc3({startAngle:0, endAngle:(Math.PI)*d.effort_spent}); }))
-		  
+		if (App.show_effort == 1) {
+			node.append("path")
+			  .attr("fill", "none")
+			  .attr("stroke-width", 3)
+			  .attr("stroke", "#CCCC00")
+			  .attr("d", (function(d:any,i:any) { return arc3({startAngle:0, endAngle:(Math.PI)*d.effort_spent}); }))
+		}
+		
+		if (App.show_bugs) {  
 		node.append("path")
 		  .attr("fill", "none")
 		  .attr("stroke-width", 3)
 		  .attr("stroke", "red")
 		  .attr("d", (function(d:any,i:any) { return arc2({startAngle:0, endAngle:(Math.PI)*d.open_to_closed_bugs}); }))
+		}
 
 
+		if (App.show_costRevenue) { 
 		node.append("path")
 		  .attr("fill", "none")
 		  .attr("stroke-width", 3)
 		  .attr("stroke", "blue")
 		  .attr("d", (function(d:any,i:any) { return arc4({startAngle:0, endAngle:(Math.PI)*d.cost_to_revenue}); }))
+		}
 
+		if (App.show_issues) { 
 		node.append("path")
 		  .attr("fill", "none")
 		  .attr("stroke-width", 3)
 		  .attr("stroke", "brown")
 		  .attr("d", (function(d:any,i:any) { return arc({startAngle:0, endAngle:(Math.PI)*d.open_to_closed_issues}); }))
+		}
 
 		// add the text
 		node.append("text")
@@ -320,11 +341,16 @@ export class App extends PureComponent<Props> {
 	}
 	
 	
-	async getDatasourceId (grafana_url: string, datasource_name: string) {
+	async getDatasourceId (grafana_url: string, datasource_name: string, api_key: string) {
 		const url: string = grafana_url+'/api/datasources/name/'+datasource_name;
 		//const api_token = "Bearer eyJrIjoiQXNmeGFPWmxJVGJuZDV3NHhCV0trYmZvN01ZVWZwdlQiLCJuIjoicHJvbWV0aGV1c0tleSIsImlkIjoxfQ==";
 		//const api_token = "Bearer eyJrIjoiV0FSREtjbzlaSlM5VDJNQ09hcWgydjE3OE1velJCVUciLCJuIjoicHJvbWV0aGV1c19rZXkiLCJpZCI6MX0=";
-		const api_token = "Bearer eyJrIjoiTTBIRkRvb01lWmt5NnlCZmZ2SkhCNk14bk1JQ3RzVjIiLCJuIjoiZHNLZXkiLCJpZCI6MX0=";
+		//below for lenovo linux machine
+		//const api_token = "Bearer eyJrIjoiQU1pMzFaZXlTd0VsbkkwcGhTRnpGcnY3ZGNpb2JOdmEiLCJuIjoibXN2aXNLZXkiLCJpZCI6MX0=";
+		const api_token = "Bearer "+ api_key;
+
+		//below one either for server or windows. most probably server?
+		//const api_token = "Bearer eyJrIjoiTTBIRkRvb01lWmt5NnlCZmZ2SkhCNk14bk1JQ3RzVjIiLCJuIjoiZHNLZXkiLCJpZCI6MX0=";
 		
 		const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': api_token }
 		const response = await fetch(url, {mode:'no-cors', method: "GET", headers});
@@ -342,36 +368,31 @@ export class App extends PureComponent<Props> {
 		} else { return [];}
 	}
 	
-	async getPrometheusMetrics() {
+	async getPrometheusMetrics(grafana_url:string, api_key:string, ms_status_query:string, ms_resTime_query:string, ms_load1m_query:string) {
 		//var grafana_url = 'http://localhost:3000';
-		var grafana_url = 'http://130.230.52.202';
+		//var grafana_url = 'http://130.230.52.202';
 		var datasource_name = 'Prometheus';
-			
-		//var metrics_data = [] :any[];
-		//var metrics_data: (string | number)[] = [];
-		//var metrics_data:string[][] = [];
+
 		var metrics_data:string[][] = [];
-		//console.log("length of list_of_lists");
-		//console.log(metrics_data.length);
-		//console.log("datasource_Id inside getPrometheusMetrics function");
 		
-		//this.getDatasourceId(grafana_url, datasource_name).then((response) => {
-		const response = await this.getDatasourceId(grafana_url, datasource_name);
+		//this.getDatasourceId(grafana_url, datasource_name, api_key).then((response) => {
+		const response = await this.getDatasourceId(grafana_url, datasource_name, api_key);
 				console.log(response);
 				console.log("response from datasource api");
 			//if (response.status == 200 && response.statusText == "OK") {} // add error response check here
 				//const DS_proxy_url = grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query=up%7Bjob!%3D"prometheus"%7D&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
-				var DS_proxy_url = grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query=up{job!="prometheus"}&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
+
+				var DS_proxy_url = grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query=' + ms_status_query + '&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
 				/*START*/
 				const services_status = await this.runPrometheusQuery(DS_proxy_url)
 				if (services_status.status == "success"){
-					var query = 'scrape_duration_seconds{job!="prometheus"}'
-					DS_proxy_url = grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query='+ query +'&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
+					//var query = 'scrape_duration_seconds{job!="prometheus"}'
+					DS_proxy_url = grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query='+ ms_resTime_query +'&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
 					console.log(DS_proxy_url);
 					const services_response_time = await this.runPrometheusQuery(DS_proxy_url);
 					if (services_response_time.status == "success"){
-						query = 'scrape_samples_scraped{job!="prometheus"}'
-						DS_proxy_url = grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query='+ query +'&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
+						//query = 'scrape_samples_scraped{job!="prometheus"}'
+						DS_proxy_url = grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query='+ ms_load1m_query +'&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
 						
 						const services_load_1m = await this.runPrometheusQuery(DS_proxy_url);
 						if (services_load_1m.status == "success"){
@@ -402,20 +423,20 @@ export class App extends PureComponent<Props> {
 		return metrics_data;
 	}
 	
-	async getSQLData(){
+	async getSQLData(grafana_url:string, api_key:string){
 		console.log("Inside getSQLData() FUNCTION");
 		//var grafana_url = 'http://localhost:3000';
-		var grafana_url = 'http://130.230.52.202:80';
+		//var grafana_url = 'http://130.230.52.202:80';
 		//var datasource_name = 'MySQL';
 		//var metrics_data:string[][] = [];
-		//const response = await this.getDatasourceId(grafana_url, datasource_name);
+		//const response = await this.getDatasourceId(grafana_url, datasource_name, api_key);
 		
 		const url: string = grafana_url + '/api/tsdb/query';
 		//const request_payload = {'from':'1591250314728','to':'1591271914728','queries':'[{"refId":"A","intervalMs":60000,"maxDataPoints":900,"datasourceId":86,"rawSql":"SELECT *\nFROM metrics;\n","format":"table"}]'};
 		//const request_payload = {queries:[{refId:"tempvar",datasourceId:86,"rawSql":"SELECT\n  closed_bugs_count AS \"closed_bugs\",\n  open_bugs_count AS \"open_bugs\",\n  closed_issues_count AS \"closed_issues\",\n  open_issues_count AS \"open_issues\",\n  revenue AS \"revenue\",\n  cost AS \"cost\",\n  effort AS \"effort\",\n  service_name AS \"service_name\"\nFROM metrics\nORDER BY service_name",format:"table"}],"from":"1591251225566","to":"1591272825566"};
 		//const request_payload = {"from":"1591257698882","to":"1591279298882","queries":[{"refId":"A","intervalMs":60000,"maxDataPoints":466,"datasourceId":86,"rawSql":"SELECT\n  closed_bugs_count AS \"closed_bugs\",\n  open_bugs_count AS \"open_bugs\",\n  closed_issues_count AS \"closed_issues\",\n  open_issues_count AS \"open_issues\",\n  revenue AS \"revenue\",\n  cost AS \"cost\",\n  effort AS \"effort\",\n  service_name AS \"service_name\"\nFROM metrics\nORDER BY service_name","format":"table"}]};
 		const datasource_name = "MySQL";
-		const datasourceId = await this.getDatasourceId(grafana_url, datasource_name);
+		const datasourceId = await this.getDatasourceId(grafana_url, datasource_name, api_key);
 		const request_payload = {"from":"1591257698882","to":"1591279298882","queries":[{"refId":"A","intervalMs":60000,"maxDataPoints":466,"datasourceId":datasourceId.id,"rawSql":"SELECT\n  service_name AS \"service_name\",\n  closed_bugs_count AS \"closed_bugs\",\n  open_bugs_count AS \"open_bugs\",\n  closed_issues_count AS \"closed_issues\",\n  open_issues_count AS \"open_issues\",\n  revenue AS \"revenue\",\n  cost AS \"cost\",\n  effort AS \"effort\"\nFROM metrics\nORDER BY service_name\n","format":"table"}]};
 		
 		const res = await fetch(url, {
@@ -435,8 +456,8 @@ export class App extends PureComponent<Props> {
 		} else { return [];}
 	}
 	
-	async sortSQLData() {
-		const res = await this.getSQLData();
+	async sortSQLData(grafana_url:string, api_key:string) {
+		const res = await this.getSQLData(grafana_url, api_key);
 		
 		if (res != [])
 		{
@@ -447,9 +468,46 @@ export class App extends PureComponent<Props> {
 	}
 
 	componentDidMount () {
+		/*const metricsData = (window as any).__INITIAL_DATA__;
+		type metricsData = {
+			service_name: string;
+			closed_bugs: string;
+			open_bugs: string;
+			closed_issues: string;
+			open_issues: string;
+			revenue: string;
+			cost: string;
+			effort: string;
+			show_bugs: number;
+			show_issues: number;
+			show_costRevenue: number;
+			//show_effort: number;
+		};*/
+
 		//this.sortSQLData();
 		//this.getPrometheusMetrics();
-		this.mergeMetricsData();
+		var config = require('/home/fouzia/Documents/Thesis/msvis.json');
+		console.log(config);
+		var grafana_url = config['grafana_url'];
+		var api_key = config['api_key_admin'];
+		var ms_status_query = config['services_status_query_prometheus'];
+		var ms_resTime_query = config['services_responseTime_query_prometheus'];
+		var ms_load1m_query = config['services_responseTime_query_prometheus'];
+		App.service_name = config['erviceName_col_name'];
+		App.closed_bugs = config['closed_bugs_count_col_name'];
+		App.open_bugs = config['open_bugs_count_col_name'];
+		App.closed_issues = config['closed_issues_count_col_name'];
+		App.open_issues = config['open_issues_count_col_name'];
+		App.revenue = config['services_revenue_col_name'];
+		App.cost = config['services_cost_col_name'];
+		App.effort = config['services_effort_col_name'];
+		App.show_bugs = config['show_bugs_ratio'];
+		App.show_issues =config['show_issues_ratio'];
+		App.show_costRevenue = config['show_costToRevenue_ratio'];
+		App.show_effort = config['show_relative_effort'];
+		console.log(App.show_effort);
+
+		this.mergeMetricsData(grafana_url, api_key, ms_status_query, ms_resTime_query, ms_load1m_query);
 	}
 	
   render() {

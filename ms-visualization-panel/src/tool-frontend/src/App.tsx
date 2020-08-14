@@ -65,13 +65,17 @@ export class App extends PureComponent<Props> {
 	
 	async getDatasourceId (grafana_url: string, datasource_name: string) {
 		const url: string = grafana_url+'/api/datasources/name/'+datasource_name;
-		//const url: string = 'http://130.230.52.202/' + grafana_url+'/api/datasources/name/'+datasource_name;
+		//const api_token = "Bearer eyJrIjoiQXNmeGFPWmxJVGJuZDV3NHhCV0trYmZvN01ZVWZwdlQiLCJuIjoicHJvbWV0aGV1c0tleSIsImlkIjoxfQ==";
 		//const api_token = "Bearer eyJrIjoiV0FSREtjbzlaSlM5VDJNQ09hcWgydjE3OE1velJCVUciLCJuIjoicHJvbWV0aGV1c19rZXkiLCJpZCI6MX0=";
-		const api_token = "Bearer eyJrIjoiTTBIRkRvb01lWmt5NnlCZmZ2SkhCNk14bk1JQ3RzVjIiLCJuIjoiZHNLZXkiLCJpZCI6MX0=";
-		
-		const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': api_token, 'Access-Control-Allow-Origin': 'http://130.230.52.202' }
+		//below for lenovo linux machine
+		const api_token = "Bearer eyJrIjoiMXQza2ZEaDVNWTFoZmZzd0xUNjZzOFNoSGt0RDRCNUEiLCJuIjoibXN2aXNfa2V5IiwiaWQiOjF9";
 
+		//below one either for server or windows. most probably server?
+		//const api_token = "Bearer eyJrIjoiTTBIRkRvb01lWmt5NnlCZmZ2SkhCNk14bk1JQ3RzVjIiLCJuIjoiZHNLZXkiLCJpZCI6MX0=";
+		
+		const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': api_token }
 		const response = await fetch(url, {mode:'no-cors', method: "GET", headers});
+		//const response = await fetch(url, {headers});
 		console.log("New json response");
 		if (response.status == 200 && response.statusText == "OK") {
 			return response.json();
