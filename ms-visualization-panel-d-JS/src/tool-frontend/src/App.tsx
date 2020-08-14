@@ -14,6 +14,11 @@ interface Props extends PanelProps<SimpleOptions> {}
 //const s = require('./style/App.css');
 export class App extends PureComponent<Props> {
 
+	static grafana_url: string;
+	static api_key: string;
+	static ms_status_query: string;
+	static ms_resTime_query: string;
+	static ms_load1m_query: string;
 	static service_name: string;
 	static closed_bugs: number;
 	static open_bugs: number;
@@ -31,18 +36,18 @@ export class App extends PureComponent<Props> {
 		super(props);
 	}
 	
-	async mergeMetricsData(grafana_url:string, api_key:string, ms_status_query:string, ms_resTime_query:string, ms_load1m_query:string){
+	async mergeMetricsData(){
 		const { data } = this.props;
 		console.log(data.series);
 		if (data.series.length < 1) {
 
 		}
 		else {
-			const prometheus_metrics = await this.getPrometheusMetrics(grafana_url, api_key, ms_status_query, ms_resTime_query, ms_load1m_query);
+			const prometheus_metrics = await this.getPrometheusMetrics();
 			console.log("Prometheus metrics_data inside drawGraph");
 			console.log(prometheus_metrics);
 			
-			const business_metrics = await this.sortSQLData(grafana_url, api_key);
+			const business_metrics = await this.sortSQLData();
 			console.log("Printing SQLData inside draw graph after prometheus metrics");
 			console.log(business_metrics);
 			
@@ -55,86 +60,101 @@ export class App extends PureComponent<Props> {
 				this.drawGraph(result);
 			else 
 				return;
-			/*var vis = require('../node_modules/vis/dist/vis.js');
-			var container = document.getElementById("mynetwork");
-			const nodes_ = new vis.DataSet(result[0]);
-			const edges_ = new vis.DataSet(result[1]);
-			console.log(nodes_);
-			
-			var graphData = {
-				nodes: nodes_,
-				edges: edges_
-			};
-			//console.log("graphData");
-			//console.log(graphData);
-			if (graphData.nodes.length > 0){
-				var outputNetwork = new vis.Network(container, graphData, result[2]);
-				console.log(outputNetwork);
-			}
-			//this.prometheusData();
-			return;*/
+
 		}
+	}
+	
+	async drawLegend() {
+			// Draws legend
+			var d3 = require('../d3js_modules/d3.v3.min.js');
+
+			var svg = d3.select("#graph_legend");
+			
+			if (App.show_bugs == 1) {
+			svg.append("rect").attr("x",10).attr("y",20).attr("width", 15).attr("height", 10).style("fill", "red").style("stroke-width", 0)
+			svg.append("text").attr("x", 50).attr("y", 24).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline","middle")
+			svg.append("rect").attr("x",25).attr("y",20).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
+			svg.append("text").attr("x", 120).attr("y", 24).text("- Open bugs").style("font-size", "12px").attr("alignment-baseline","middle")
+			}
+
+			if (App.show_issues == 1) {	
+			svg.append("rect").attr("x",10).attr("y",40).attr("width", 15).attr("height", 10).style("fill", "brown").style("stroke-width", 0)
+			svg.append("text").attr("x", 50).attr("y", 44).text("Closed issues").style("font-size", "12px").attr("alignment-baseline","middle")
+			svg.append("rect").attr("x",25).attr("y",40).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
+			svg.append("text").attr("x", 130).attr("y", 44).text("- Open issues").style("font-size", "12px").attr("alignment-baseline","middle")
+			}
+
+			if (App.show_costRevenue == 1) {
+			svg.append("rect").attr("x",10).attr("y",60).attr("width", 15).attr("height", 10).style("fill", "blue").style("stroke-width", 0)
+			svg.append("text").attr("x", 50).attr("y", 64).text("Revenue").style("font-size", "12px").attr("alignment-baseline","middle")
+			svg.append("rect").attr("x",25).attr("y",60).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
+			svg.append("text").attr("x", 100).attr("y", 64).text("- Cost").style("font-size", "12px").attr("alignment-baseline","middle")
+			}
+
+			if (App.show_effort == 1) {
+			svg.append("rect").attr("x",10).attr("y",80).attr("width", 15).attr("height", 10).style("fill", "#CCCC00").style("stroke-width", 0)
+			svg.append("text").attr("x", 52).attr("y", 84).text("Effort Comparison").style("font-size", "12px").attr("alignment-baseline","middle")
+			}
 	}
 	
 	async drawGraph(metrics_data:any[]){
 		var d3 = require('../d3js_modules/d3.v3.min.js');
 		
 		// select the svg area for graph's legend
-		/*var dataset = {
-			nodes: [
-			{name1: "frontend", effort: 1, open_issues: 20, closed_issues: 30, open_bugs: 50, closed_bugs: 69, cost: 5000, revenue: 9800},
-			{name1: "customer", effort: 1.5, open_issues: 90, closed_issues: 33, open_bugs: 10, closed_bugs: 49, cost: 4000, revenue: 6000},
-			{name1: "route", effort: 1.25, open_issues: 70, closed_issues: 20, open_bugs: 40, closed_bugs: 33, cost: 9900, revenue: 50000},
-			{name1: "mysql", effort: 1.75, open_issues: 20, closed_issues: 30, open_bugs: 60, closed_bugs: 12, cost: 700, revenue: 55000},
-			{name1: "redis", effort: 2, open_issues: 10, closed_issues: 70, open_bugs: 70, closed_bugs: 66, cost: 400, revenue: 2000},
-			{name1: "driver", effort: 0.75, open_issues: 50, closed_issues: 60, open_bugs: 80, closed_bugs: 44, cost: 6600, revenue: 1000}
-			],
-			links: [
-			{source: 5, target: 4, call: "0"},
-			{source: 1, target: 3, call: "1"},
-			{source: 0, target: 5, call: "3"},
-			{source: 0, target: 2, call: "9"},
-			{source: 0, target: 1, call: "14"}
-			]
-		};*/
+
 		
 		var dataset = {nodes: metrics_data[0], links: metrics_data[1]};	
 
 		console.log("calls check#####");
 		console.log(dataset);
-		console.log(dataset.links[0]);
-		console.log(dataset.links[0].calls);
-		console.log((dataset.links[0]).length);
+		//console.log(dataset.links[0]);
+		//console.log(dataset.links[0].calls);
+		//console.log((dataset.links[0]).length);
 		
 		//var business_metrics = [["frontend",10,13,30,15,31,13,27],["customer",11,14,35,18,41,9,19],["route",21,24,45,58,41,19,99], ["mysql", 2, 4, 5, 2, 5, 2, 9], ["redis", 33, 19, 44, 66, 22, 77, 90], ["driver", 22, 23, 25, 26 ,26, 19, 50]];
 
 		//d3.csv("force.csv", function(error, links) {
 
+		var width = 1400,
+		height = 750;
+
 		if (dataset.links != null)
 		{
-			var svg = d3.select("#graph_legend")
+			this.drawLegend();
+/*
+			// Draws legend
+			var svg = d3.select("#graph_legend");
 
-			// Draw legend
-			svg.append("rect").attr("x",10).attr("y",20).attr("width", 15).attr("height", 10).style("fill", "red").style("stroke-width", 0)		
-			svg.append("rect").attr("x",25).attr("y",20).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
-			svg.append("rect").attr("x",10).attr("y",40).attr("width", 15).attr("height", 10).style("fill", "brown").style("stroke-width", 0)	
-			svg.append("rect").attr("x",25).attr("y",40).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
-			svg.append("rect").attr("x",10).attr("y",60).attr("width", 15).attr("height", 10).style("fill", "blue").style("stroke-width", 0)	
-			svg.append("rect").attr("x",25).attr("y",60).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
-			svg.append("rect").attr("x",10).attr("y",80).attr("width", 15).attr("height", 10).style("fill", "#CCCC00").style("stroke-width", 0)
-
-			//svg.append("text").attr("x", 70).attr("y", 50).text("Microservice").style("font-size", "12px").attr("alignment-baseline","middle")
-			svg.append("text").attr("x", 50).attr("y", 24).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline","middle")
-			svg.append("text").attr("x", 120).attr("y", 24).text("- Open bugs").style("font-size", "12px").attr("alignment-baseline","middle")
-			svg.append("text").attr("x", 50).attr("y", 44).text("Closed issues").style("font-size", "12px").attr("alignment-baseline","middle")
-			svg.append("text").attr("x", 130).attr("y", 44).text("- Open issues").style("font-size", "12px").attr("alignment-baseline","middle")
-			svg.append("text").attr("x", 50).attr("y", 64).text("Revenue").style("font-size", "12px").attr("alignment-baseline","middle")
-			svg.append("text").attr("x", 100).attr("y", 64).text("- Cost").style("font-size", "12px").attr("alignment-baseline","middle")
-			svg.append("text").attr("x", 52).attr("y", 84).text("Effort Comparison").style("font-size", "12px").attr("alignment-baseline","middle")
 			
+			if (App.show_bugs == 1) {
+			svg.append("rect").attr("x",10).attr("y",20).attr("width", 15).attr("height", 10).style("fill", "red").style("stroke-width", 0)
+			svg.append("text").attr("x", 50).attr("y", 24).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline","middle")
+			svg.append("rect").attr("x",25).attr("y",20).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
+			svg.append("text").attr("x", 120).attr("y", 24).text("- Open bugs").style("font-size", "12px").attr("alignment-baseline","middle")
+			}
+
+			if (App.show_issues == 1) {	
+			svg.append("rect").attr("x",10).attr("y",40).attr("width", 15).attr("height", 10).style("fill", "brown").style("stroke-width", 0)
+			svg.append("text").attr("x", 50).attr("y", 44).text("Closed issues").style("font-size", "12px").attr("alignment-baseline","middle")
+			svg.append("rect").attr("x",25).attr("y",40).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
+			svg.append("text").attr("x", 130).attr("y", 44).text("- Open issues").style("font-size", "12px").attr("alignment-baseline","middle")
+			}
+
+			if (App.show_costRevenue == 1) {
+			svg.append("rect").attr("x",10).attr("y",60).attr("width", 15).attr("height", 10).style("fill", "blue").style("stroke-width", 0)
+			svg.append("text").attr("x", 50).attr("y", 64).text("Revenue").style("font-size", "12px").attr("alignment-baseline","middle")
+			svg.append("rect").attr("x",25).attr("y",60).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
+			svg.append("text").attr("x", 100).attr("y", 64).text("- Cost").style("font-size", "12px").attr("alignment-baseline","middle")
+			}
+
+			if (App.show_effort == 1) {
+			svg.append("rect").attr("x",10).attr("y",80).attr("width", 15).attr("height", 10).style("fill", "#CCCC00").style("stroke-width", 0)
+			svg.append("text").attr("x", 52).attr("y", 84).text("Effort Comparison").style("font-size", "12px").attr("alignment-baseline","middle")
+			}
+
+*/			
 		}
-		var width = 1200,
-			height = 570;
+
 
 		//const s = require('./App.css');
 		
@@ -338,16 +358,19 @@ export class App extends PureComponent<Props> {
 				return "translate(" + d.x + "," + d.y + ")"; });
 		}
 
+
+		
+
 	}
 	
 	
-	async getDatasourceId (grafana_url: string, datasource_name: string, api_key: string) {
-		const url: string = grafana_url+'/api/datasources/name/'+datasource_name;
+	async getDatasourceId (datasource_name:string) {
+		const url: string = App.grafana_url+'/api/datasources/name/'+datasource_name;
 		//const api_token = "Bearer eyJrIjoiQXNmeGFPWmxJVGJuZDV3NHhCV0trYmZvN01ZVWZwdlQiLCJuIjoicHJvbWV0aGV1c0tleSIsImlkIjoxfQ==";
 		//const api_token = "Bearer eyJrIjoiV0FSREtjbzlaSlM5VDJNQ09hcWgydjE3OE1velJCVUciLCJuIjoicHJvbWV0aGV1c19rZXkiLCJpZCI6MX0=";
 		//below for lenovo linux machine
 		//const api_token = "Bearer eyJrIjoiQU1pMzFaZXlTd0VsbkkwcGhTRnpGcnY3ZGNpb2JOdmEiLCJuIjoibXN2aXNLZXkiLCJpZCI6MX0=";
-		const api_token = "Bearer "+ api_key;
+		const api_token = "Bearer "+ App.api_key;
 
 		//below one either for server or windows. most probably server?
 		//const api_token = "Bearer eyJrIjoiTTBIRkRvb01lWmt5NnlCZmZ2SkhCNk14bk1JQ3RzVjIiLCJuIjoiZHNLZXkiLCJpZCI6MX0=";
@@ -368,7 +391,7 @@ export class App extends PureComponent<Props> {
 		} else { return [];}
 	}
 	
-	async getPrometheusMetrics(grafana_url:string, api_key:string, ms_status_query:string, ms_resTime_query:string, ms_load1m_query:string) {
+	async getPrometheusMetrics() {
 		//var grafana_url = 'http://localhost:3000';
 		//var grafana_url = 'http://130.230.52.202';
 		var datasource_name = 'Prometheus';
@@ -376,23 +399,23 @@ export class App extends PureComponent<Props> {
 		var metrics_data:string[][] = [];
 		
 		//this.getDatasourceId(grafana_url, datasource_name, api_key).then((response) => {
-		const response = await this.getDatasourceId(grafana_url, datasource_name, api_key);
+		const response = await this.getDatasourceId(datasource_name);
 				console.log(response);
 				console.log("response from datasource api");
 			//if (response.status == 200 && response.statusText == "OK") {} // add error response check here
 				//const DS_proxy_url = grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query=up%7Bjob!%3D"prometheus"%7D&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
 
-				var DS_proxy_url = grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query=' + ms_status_query + '&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
+				var DS_proxy_url = App.grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query=' + App.ms_status_query + '&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
 				/*START*/
 				const services_status = await this.runPrometheusQuery(DS_proxy_url)
 				if (services_status.status == "success"){
 					//var query = 'scrape_duration_seconds{job!="prometheus"}'
-					DS_proxy_url = grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query='+ ms_resTime_query +'&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
+					DS_proxy_url = App.grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query='+ App.ms_resTime_query +'&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
 					console.log(DS_proxy_url);
 					const services_response_time = await this.runPrometheusQuery(DS_proxy_url);
 					if (services_response_time.status == "success"){
 						//query = 'scrape_samples_scraped{job!="prometheus"}'
-						DS_proxy_url = grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query='+ ms_load1m_query +'&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
+						DS_proxy_url = App.grafana_url+'/api/datasources/' + response.access + '/' + (response.id).toString() + '/api/v1/query_range?query='+ App.ms_load1m_query +'&start=' + (Math.floor(Date.now()/1000)).toString() + '&end=' + (Math.floor(Date.now()/1000)).toString() + '&step=30';
 						
 						const services_load_1m = await this.runPrometheusQuery(DS_proxy_url);
 						if (services_load_1m.status == "success"){
@@ -423,20 +446,20 @@ export class App extends PureComponent<Props> {
 		return metrics_data;
 	}
 	
-	async getSQLData(grafana_url:string, api_key:string){
+	async getSQLData(){
 		console.log("Inside getSQLData() FUNCTION");
 		//var grafana_url = 'http://localhost:3000';
 		//var grafana_url = 'http://130.230.52.202:80';
 		//var datasource_name = 'MySQL';
 		//var metrics_data:string[][] = [];
-		//const response = await this.getDatasourceId(grafana_url, datasource_name, api_key);
+		//const response = await this.getDatasourceId();
 		
-		const url: string = grafana_url + '/api/tsdb/query';
+		const url: string = App.grafana_url + '/api/tsdb/query';
 		//const request_payload = {'from':'1591250314728','to':'1591271914728','queries':'[{"refId":"A","intervalMs":60000,"maxDataPoints":900,"datasourceId":86,"rawSql":"SELECT *\nFROM metrics;\n","format":"table"}]'};
 		//const request_payload = {queries:[{refId:"tempvar",datasourceId:86,"rawSql":"SELECT\n  closed_bugs_count AS \"closed_bugs\",\n  open_bugs_count AS \"open_bugs\",\n  closed_issues_count AS \"closed_issues\",\n  open_issues_count AS \"open_issues\",\n  revenue AS \"revenue\",\n  cost AS \"cost\",\n  effort AS \"effort\",\n  service_name AS \"service_name\"\nFROM metrics\nORDER BY service_name",format:"table"}],"from":"1591251225566","to":"1591272825566"};
 		//const request_payload = {"from":"1591257698882","to":"1591279298882","queries":[{"refId":"A","intervalMs":60000,"maxDataPoints":466,"datasourceId":86,"rawSql":"SELECT\n  closed_bugs_count AS \"closed_bugs\",\n  open_bugs_count AS \"open_bugs\",\n  closed_issues_count AS \"closed_issues\",\n  open_issues_count AS \"open_issues\",\n  revenue AS \"revenue\",\n  cost AS \"cost\",\n  effort AS \"effort\",\n  service_name AS \"service_name\"\nFROM metrics\nORDER BY service_name","format":"table"}]};
 		const datasource_name = "MySQL";
-		const datasourceId = await this.getDatasourceId(grafana_url, datasource_name, api_key);
+		const datasourceId = await this.getDatasourceId(datasource_name);
 		const request_payload = {"from":"1591257698882","to":"1591279298882","queries":[{"refId":"A","intervalMs":60000,"maxDataPoints":466,"datasourceId":datasourceId.id,"rawSql":"SELECT\n  service_name AS \"service_name\",\n  closed_bugs_count AS \"closed_bugs\",\n  open_bugs_count AS \"open_bugs\",\n  closed_issues_count AS \"closed_issues\",\n  open_issues_count AS \"open_issues\",\n  revenue AS \"revenue\",\n  cost AS \"cost\",\n  effort AS \"effort\"\nFROM metrics\nORDER BY service_name\n","format":"table"}]};
 		
 		const res = await fetch(url, {
@@ -456,8 +479,8 @@ export class App extends PureComponent<Props> {
 		} else { return [];}
 	}
 	
-	async sortSQLData(grafana_url:string, api_key:string) {
-		const res = await this.getSQLData(grafana_url, api_key);
+	async sortSQLData() {
+		const res = await this.getSQLData();
 		
 		if (res != [])
 		{
@@ -467,7 +490,7 @@ export class App extends PureComponent<Props> {
 			return [];
 	}
 
-	componentDidMount () {
+	async readConfiguration() {
 		/*const metricsData = (window as any).__INITIAL_DATA__;
 		type metricsData = {
 			service_name: string;
@@ -484,15 +507,13 @@ export class App extends PureComponent<Props> {
 			//show_effort: number;
 		};*/
 
-		//this.sortSQLData();
-		//this.getPrometheusMetrics();
 		var config = require('/home/fouzia/Documents/Thesis/msvis.json');
 		console.log(config);
-		var grafana_url = config['grafana_url'];
-		var api_key = config['api_key_admin'];
-		var ms_status_query = config['services_status_query_prometheus'];
-		var ms_resTime_query = config['services_responseTime_query_prometheus'];
-		var ms_load1m_query = config['services_responseTime_query_prometheus'];
+		App.grafana_url = config['grafana_url'];
+		App.api_key = config['api_key_admin'];
+		App.ms_status_query = config['services_status_query_prometheus'];
+		App.ms_resTime_query = config['services_responseTime_query_prometheus'];
+		App.ms_load1m_query = config['services_responseTime_query_prometheus'];
 		App.service_name = config['erviceName_col_name'];
 		App.closed_bugs = config['closed_bugs_count_col_name'];
 		App.open_bugs = config['open_bugs_count_col_name'];
@@ -506,29 +527,32 @@ export class App extends PureComponent<Props> {
 		App.show_costRevenue = config['show_costToRevenue_ratio'];
 		App.show_effort = config['show_relative_effort'];
 		console.log(App.show_effort);
+	}
 
-		this.mergeMetricsData(grafana_url, api_key, ms_status_query, ms_resTime_query, ms_load1m_query);
+	componentDidMount () {
+		//this.sortSQLData();
+		//this.getPrometheusMetrics();
+		this.readConfiguration();
+		this.mergeMetricsData();
 	}
 	
   render() {
-	var legend_style = { cssFloat:'left' } as React.CSSProperties;
-	var mynetwork_style = {"height":"150px", "width":"200px", cssFloat:'right'} as React.CSSProperties;
-    //var mynetwork_style = { float:'left', border-style:'solid', height:'150px', width:'200px' } as React.CSSProperties;
-/*	var legend_style = {
-     splitterStyle: {
-         height: 150px,
-		 width: 200px,
-		 float: right
-     }
-};*/
+	var legend_style = { "width":"300px", 'height': '150px', 'padding-top': '5px', 'position': 'absolute' } as React.CSSProperties;
+	var mynetwork_style = {"width":"1400px", 'height': '750px', border: 'solid', 'border-width': '0.25px', 'border-color': 'grey', 'padding': '5px 5px 5px 5px', 'overflow': 'scroll'} as React.CSSProperties;
+
+    //var mynetwork_style = { float:'left', border: 'solid', 'padding-top': '5px', 'overflow': 'scroll' } as React.CSSProperties;
+
 	return (
-      /*<div style="height:700px;width:600px">
-		<p>Microservices Call Dependency Graph</p>
-		<div id = "mynetwork" className="Graph"></div>
-      </div>*/
+		//working blocks below
+/*
 	  <div id="mynetwork" className="Graph" style={legend_style}>
 		<p>Microservices Call Dependency Graph</p>
 		<div style={mynetwork_style}><svg id="graph_legend" ></svg></div>
+	  </div>
+*/
+	  <div id="mynetwork" style={mynetwork_style}>
+		<p style={legend_style}>Microservices Call Dependency Graph<svg id="graph_legend" ></svg></p>
+
 	  </div>
     );
   }

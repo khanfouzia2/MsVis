@@ -93,7 +93,7 @@ define(["@grafana/data","@grafana/ui","react"], function(__WEBPACK_EXTERNAL_MODU
 /*! exports provided: grafana_url, api_key_admin, services_status_query_prometheus, services_responseTime_query_prometheus, services_LoadPerMin_query_prometheus, erviceName_col_name, closed_bugs_count_col_name, open_bugs_count_col_name, closed_issues_count_col_name, open_issues_count_col_name, services_revenue_col_name, services_cost_col_name, services_effort_col_name, show_bugs_ratio, show_issues_ratio, show_costToRevenue_ratio, show_relative_effort, default */
 /***/ (function(module) {
 
-module.exports = {"grafana_url":"http://localhost:3000","api_key_admin":"eyJrIjoiQU1pMzFaZXlTd0VsbkkwcGhTRnpGcnY3ZGNpb2JOdmEiLCJuIjoibXN2aXNLZXkiLCJpZCI6MX0=","services_status_query_prometheus":"up{job!='prometheus'}","services_responseTime_query_prometheus":"scrape_duration_seconds{job!='prometheus'}","services_LoadPerMin_query_prometheus":"scrape_samples_scraped{job!='prometheus'}","erviceName_col_name":"service_name","closed_bugs_count_col_name":"closed_bugs_count","open_bugs_count_col_name":"open_bugs_count","closed_issues_count_col_name":"closed_issues_count","open_issues_count_col_name":"open_issues_count","services_revenue_col_name":"revenue","services_cost_col_name":"cost","services_effort_col_name":"effort","show_bugs_ratio":0,"show_issues_ratio":1,"show_costToRevenue_ratio":0,"show_relative_effort":1};
+module.exports = {"grafana_url":"http://localhost:3000","api_key_admin":"eyJrIjoiQU1pMzFaZXlTd0VsbkkwcGhTRnpGcnY3ZGNpb2JOdmEiLCJuIjoibXN2aXNLZXkiLCJpZCI6MX0=","services_status_query_prometheus":"up{job!='prometheus'}","services_responseTime_query_prometheus":"scrape_duration_seconds{job!='prometheus'}","services_LoadPerMin_query_prometheus":"scrape_samples_scraped{job!='prometheus'}","erviceName_col_name":"service_name","closed_bugs_count_col_name":"closed_bugs_count","open_bugs_count_col_name":"open_bugs_count","closed_issues_count_col_name":"closed_issues_count","open_issues_count_col_name":"open_issues_count","services_revenue_col_name":"revenue","services_cost_col_name":"cost","services_effort_col_name":"effort","show_bugs_ratio":1,"show_issues_ratio":1,"show_costToRevenue_ratio":1,"show_relative_effort":1};
 
 /***/ }),
 
@@ -9518,7 +9518,7 @@ function (_super) {
     return _super.call(this, props) || this;
   }
 
-  App.prototype.mergeMetricsData = function (grafana_url, api_key, ms_status_query, ms_resTime_query, ms_load1m_query) {
+  App.prototype.mergeMetricsData = function () {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
       var data, prometheus_metrics, business_metrics, result;
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
@@ -9536,7 +9536,7 @@ function (_super) {
           case 1:
             return [4
             /*yield*/
-            , this.getPrometheusMetrics(grafana_url, api_key, ms_status_query, ms_resTime_query, ms_load1m_query)];
+            , this.getPrometheusMetrics()];
 
           case 2:
             prometheus_metrics = _a.sent();
@@ -9544,7 +9544,7 @@ function (_super) {
             console.log(prometheus_metrics);
             return [4
             /*yield*/
-            , this.sortSQLData(grafana_url, api_key)];
+            , this.sortSQLData()];
 
           case 3:
             business_metrics = _a.sent();
@@ -9573,6 +9573,46 @@ function (_super) {
     });
   };
 
+  App.prototype.drawLegend = function () {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+      var d3, svg;
+      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+        d3 = __webpack_require__(/*! ../d3js_modules/d3.v3.min.js */ "./tool-frontend/d3js_modules/d3.v3.min.js");
+        svg = d3.select("#graph_legend");
+
+        if (App.show_bugs == 1) {
+          svg.append("rect").attr("x", 10).attr("y", 20).attr("width", 15).attr("height", 10).style("fill", "red").style("stroke-width", 0);
+          svg.append("text").attr("x", 50).attr("y", 24).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline", "middle");
+          svg.append("rect").attr("x", 25).attr("y", 20).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0);
+          svg.append("text").attr("x", 120).attr("y", 24).text("- Open bugs").style("font-size", "12px").attr("alignment-baseline", "middle");
+        }
+
+        if (App.show_issues == 1) {
+          svg.append("rect").attr("x", 10).attr("y", 40).attr("width", 15).attr("height", 10).style("fill", "brown").style("stroke-width", 0);
+          svg.append("text").attr("x", 50).attr("y", 44).text("Closed issues").style("font-size", "12px").attr("alignment-baseline", "middle");
+          svg.append("rect").attr("x", 25).attr("y", 40).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0);
+          svg.append("text").attr("x", 130).attr("y", 44).text("- Open issues").style("font-size", "12px").attr("alignment-baseline", "middle");
+        }
+
+        if (App.show_costRevenue == 1) {
+          svg.append("rect").attr("x", 10).attr("y", 60).attr("width", 15).attr("height", 10).style("fill", "blue").style("stroke-width", 0);
+          svg.append("text").attr("x", 50).attr("y", 64).text("Revenue").style("font-size", "12px").attr("alignment-baseline", "middle");
+          svg.append("rect").attr("x", 25).attr("y", 60).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0);
+          svg.append("text").attr("x", 100).attr("y", 64).text("- Cost").style("font-size", "12px").attr("alignment-baseline", "middle");
+        }
+
+        if (App.show_effort == 1) {
+          svg.append("rect").attr("x", 10).attr("y", 80).attr("width", 15).attr("height", 10).style("fill", "#CCCC00").style("stroke-width", 0);
+          svg.append("text").attr("x", 52).attr("y", 84).text("Effort Comparison").style("font-size", "12px").attr("alignment-baseline", "middle");
+        }
+
+        return [2
+        /*return*/
+        ];
+      });
+    });
+  };
+
   App.prototype.drawGraph = function (metrics_data) {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
       // add the curvy lines
@@ -9588,7 +9628,7 @@ function (_super) {
         });
       }
 
-      var d3, dataset, svg, width, height, force, svg, id, path, text_, node, svg, arc, arc2, arc3, arc4, msg_bus, db, _loop_1, i;
+      var d3, dataset, width, height, force, svg, id, path, text_, node, svg, arc, arc2, arc3, arc4, msg_bus, db, _loop_1, i;
 
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         d3 = __webpack_require__(/*! ../d3js_modules/d3.v3.min.js */ "./tool-frontend/d3js_modules/d3.v3.min.js");
@@ -9598,32 +9638,44 @@ function (_super) {
         };
         console.log("calls check#####");
         console.log(dataset);
-        console.log(dataset.links[0]);
-        console.log(dataset.links[0].calls);
-        console.log(dataset.links[0].length); //var business_metrics = [["frontend",10,13,30,15,31,13,27],["customer",11,14,35,18,41,9,19],["route",21,24,45,58,41,19,99], ["mysql", 2, 4, 5, 2, 5, 2, 9], ["redis", 33, 19, 44, 66, 22, 77, 90], ["driver", 22, 23, 25, 26 ,26, 19, 50]];
-        //d3.csv("force.csv", function(error, links) {
+        width = 1400, height = 750;
 
         if (dataset.links != null) {
-          svg = d3.select("#graph_legend"); // Draw legend
-
-          svg.append("rect").attr("x", 10).attr("y", 20).attr("width", 15).attr("height", 10).style("fill", "red").style("stroke-width", 0);
-          svg.append("rect").attr("x", 25).attr("y", 20).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0);
-          svg.append("rect").attr("x", 10).attr("y", 40).attr("width", 15).attr("height", 10).style("fill", "brown").style("stroke-width", 0);
-          svg.append("rect").attr("x", 25).attr("y", 40).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0);
-          svg.append("rect").attr("x", 10).attr("y", 60).attr("width", 15).attr("height", 10).style("fill", "blue").style("stroke-width", 0);
-          svg.append("rect").attr("x", 25).attr("y", 60).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0);
-          svg.append("rect").attr("x", 10).attr("y", 80).attr("width", 15).attr("height", 10).style("fill", "#CCCC00").style("stroke-width", 0); //svg.append("text").attr("x", 70).attr("y", 50).text("Microservice").style("font-size", "12px").attr("alignment-baseline","middle")
-
-          svg.append("text").attr("x", 50).attr("y", 24).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline", "middle");
-          svg.append("text").attr("x", 120).attr("y", 24).text("- Open bugs").style("font-size", "12px").attr("alignment-baseline", "middle");
-          svg.append("text").attr("x", 50).attr("y", 44).text("Closed issues").style("font-size", "12px").attr("alignment-baseline", "middle");
-          svg.append("text").attr("x", 130).attr("y", 44).text("- Open issues").style("font-size", "12px").attr("alignment-baseline", "middle");
-          svg.append("text").attr("x", 50).attr("y", 64).text("Revenue").style("font-size", "12px").attr("alignment-baseline", "middle");
-          svg.append("text").attr("x", 100).attr("y", 64).text("- Cost").style("font-size", "12px").attr("alignment-baseline", "middle");
-          svg.append("text").attr("x", 52).attr("y", 84).text("Effort Comparison").style("font-size", "12px").attr("alignment-baseline", "middle");
+          this.drawLegend();
+          /*
+                      // Draws legend
+                      var svg = d3.select("#graph_legend");
+          
+                      
+                      if (App.show_bugs == 1) {
+                      svg.append("rect").attr("x",10).attr("y",20).attr("width", 15).attr("height", 10).style("fill", "red").style("stroke-width", 0)
+                      svg.append("text").attr("x", 50).attr("y", 24).text("Closed bugs").style("font-size", "12px").attr("alignment-baseline","middle")
+                      svg.append("rect").attr("x",25).attr("y",20).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
+                      svg.append("text").attr("x", 120).attr("y", 24).text("- Open bugs").style("font-size", "12px").attr("alignment-baseline","middle")
+                      }
+          
+                      if (App.show_issues == 1) {
+                      svg.append("rect").attr("x",10).attr("y",40).attr("width", 15).attr("height", 10).style("fill", "brown").style("stroke-width", 0)
+                      svg.append("text").attr("x", 50).attr("y", 44).text("Closed issues").style("font-size", "12px").attr("alignment-baseline","middle")
+                      svg.append("rect").attr("x",25).attr("y",40).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
+                      svg.append("text").attr("x", 130).attr("y", 44).text("- Open issues").style("font-size", "12px").attr("alignment-baseline","middle")
+                      }
+          
+                      if (App.show_costRevenue == 1) {
+                      svg.append("rect").attr("x",10).attr("y",60).attr("width", 15).attr("height", 10).style("fill", "blue").style("stroke-width", 0)
+                      svg.append("text").attr("x", 50).attr("y", 64).text("Revenue").style("font-size", "12px").attr("alignment-baseline","middle")
+                      svg.append("rect").attr("x",25).attr("y",60).attr("width", 15).attr("height", 10).style("fill", "grey").style("stroke-width", 0)
+                      svg.append("text").attr("x", 100).attr("y", 64).text("- Cost").style("font-size", "12px").attr("alignment-baseline","middle")
+                      }
+          
+                      if (App.show_effort == 1) {
+                      svg.append("rect").attr("x",10).attr("y",80).attr("width", 15).attr("height", 10).style("fill", "#CCCC00").style("stroke-width", 0)
+                      svg.append("text").attr("x", 52).attr("y", 84).text("Effort Comparison").style("font-size", "12px").attr("alignment-baseline","middle")
+                      }
+          
+          */
         }
 
-        width = 1200, height = 570;
         force = d3.layout.force().nodes(d3.values(dataset.nodes)).links(dataset.links).size([width, height]).linkDistance(170).charge(-900).on("tick", tick).start();
         svg = d3.select("#mynetwork").append("svg").attr("width", width).attr("height", height); // build the arrow.
 
@@ -9757,14 +9809,14 @@ function (_super) {
     });
   };
 
-  App.prototype.getDatasourceId = function (grafana_url, datasource_name, api_key) {
+  App.prototype.getDatasourceId = function (datasource_name) {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
       var url, api_token, headers, response;
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         switch (_a.label) {
           case 0:
-            url = grafana_url + '/api/datasources/name/' + datasource_name;
-            api_token = "Bearer " + api_key;
+            url = App.grafana_url + '/api/datasources/name/' + datasource_name;
+            api_token = "Bearer " + App.api_key;
             headers = {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
@@ -9832,7 +9884,7 @@ function (_super) {
     });
   };
 
-  App.prototype.getPrometheusMetrics = function (grafana_url, api_key, ms_status_query, ms_resTime_query, ms_load1m_query) {
+  App.prototype.getPrometheusMetrics = function () {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
       var datasource_name, metrics_data, response, DS_proxy_url, services_status, services_response_time, services_load_1m, i, arr;
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
@@ -9842,13 +9894,13 @@ function (_super) {
             metrics_data = [];
             return [4
             /*yield*/
-            , this.getDatasourceId(grafana_url, datasource_name, api_key)];
+            , this.getDatasourceId(datasource_name)];
 
           case 1:
             response = _a.sent();
             console.log(response);
             console.log("response from datasource api");
-            DS_proxy_url = grafana_url + '/api/datasources/' + response.access + '/' + response.id.toString() + '/api/v1/query_range?query=' + ms_status_query + '&start=' + Math.floor(Date.now() / 1000).toString() + '&end=' + Math.floor(Date.now() / 1000).toString() + '&step=30';
+            DS_proxy_url = App.grafana_url + '/api/datasources/' + response.access + '/' + response.id.toString() + '/api/v1/query_range?query=' + App.ms_status_query + '&start=' + Math.floor(Date.now() / 1000).toString() + '&end=' + Math.floor(Date.now() / 1000).toString() + '&step=30';
             return [4
             /*yield*/
             , this.runPrometheusQuery(DS_proxy_url)];
@@ -9859,7 +9911,7 @@ function (_super) {
             /*break*/
             , 5]; //var query = 'scrape_duration_seconds{job!="prometheus"}'
 
-            DS_proxy_url = grafana_url + '/api/datasources/' + response.access + '/' + response.id.toString() + '/api/v1/query_range?query=' + ms_resTime_query + '&start=' + Math.floor(Date.now() / 1000).toString() + '&end=' + Math.floor(Date.now() / 1000).toString() + '&step=30';
+            DS_proxy_url = App.grafana_url + '/api/datasources/' + response.access + '/' + response.id.toString() + '/api/v1/query_range?query=' + App.ms_resTime_query + '&start=' + Math.floor(Date.now() / 1000).toString() + '&end=' + Math.floor(Date.now() / 1000).toString() + '&step=30';
             console.log(DS_proxy_url);
             return [4
             /*yield*/
@@ -9871,7 +9923,7 @@ function (_super) {
             /*break*/
             , 5]; //query = 'scrape_samples_scraped{job!="prometheus"}'
 
-            DS_proxy_url = grafana_url + '/api/datasources/' + response.access + '/' + response.id.toString() + '/api/v1/query_range?query=' + ms_load1m_query + '&start=' + Math.floor(Date.now() / 1000).toString() + '&end=' + Math.floor(Date.now() / 1000).toString() + '&step=30';
+            DS_proxy_url = App.grafana_url + '/api/datasources/' + response.access + '/' + response.id.toString() + '/api/v1/query_range?query=' + App.ms_load1m_query + '&start=' + Math.floor(Date.now() / 1000).toString() + '&end=' + Math.floor(Date.now() / 1000).toString() + '&step=30';
             return [4
             /*yield*/
             , this.runPrometheusQuery(DS_proxy_url)];
@@ -9910,18 +9962,18 @@ function (_super) {
     });
   };
 
-  App.prototype.getSQLData = function (grafana_url, api_key) {
+  App.prototype.getSQLData = function () {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
       var url, datasource_name, datasourceId, request_payload, res;
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
         switch (_a.label) {
           case 0:
             console.log("Inside getSQLData() FUNCTION");
-            url = grafana_url + '/api/tsdb/query';
+            url = App.grafana_url + '/api/tsdb/query';
             datasource_name = "MySQL";
             return [4
             /*yield*/
-            , this.getDatasourceId(grafana_url, datasource_name, api_key)];
+            , this.getDatasourceId(datasource_name)];
 
           case 1:
             datasourceId = _a.sent();
@@ -9972,7 +10024,7 @@ function (_super) {
     });
   };
 
-  App.prototype.sortSQLData = function (grafana_url, api_key) {
+  App.prototype.sortSQLData = function () {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
       var res;
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
@@ -9980,7 +10032,7 @@ function (_super) {
           case 0:
             return [4
             /*yield*/
-            , this.getSQLData(grafana_url, api_key)];
+            , this.getSQLData()];
 
           case 1:
             res = _a.sent();
@@ -10001,78 +10053,75 @@ function (_super) {
     });
   };
 
+  App.prototype.readConfiguration = function () {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+      var config;
+      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+        config = __webpack_require__(/*! /home/fouzia/Documents/Thesis/msvis.json */ "../../../../Documents/Thesis/msvis.json");
+        console.log(config);
+        App.grafana_url = config['grafana_url'];
+        App.api_key = config['api_key_admin'];
+        App.ms_status_query = config['services_status_query_prometheus'];
+        App.ms_resTime_query = config['services_responseTime_query_prometheus'];
+        App.ms_load1m_query = config['services_responseTime_query_prometheus'];
+        App.service_name = config['erviceName_col_name'];
+        App.closed_bugs = config['closed_bugs_count_col_name'];
+        App.open_bugs = config['open_bugs_count_col_name'];
+        App.closed_issues = config['closed_issues_count_col_name'];
+        App.open_issues = config['open_issues_count_col_name'];
+        App.revenue = config['services_revenue_col_name'];
+        App.cost = config['services_cost_col_name'];
+        App.effort = config['services_effort_col_name'];
+        App.show_bugs = config['show_bugs_ratio'];
+        App.show_issues = config['show_issues_ratio'];
+        App.show_costRevenue = config['show_costToRevenue_ratio'];
+        App.show_effort = config['show_relative_effort'];
+        console.log(App.show_effort);
+        return [2
+        /*return*/
+        ];
+      });
+    });
+  };
+
   App.prototype.componentDidMount = function () {
-    /*const metricsData = (window as any).__INITIAL_DATA__;
-    type metricsData = {
-        service_name: string;
-        closed_bugs: string;
-        open_bugs: string;
-        closed_issues: string;
-        open_issues: string;
-        revenue: string;
-        cost: string;
-        effort: string;
-        show_bugs: number;
-        show_issues: number;
-        show_costRevenue: number;
-        //show_effort: number;
-    };*/
     //this.sortSQLData();
     //this.getPrometheusMetrics();
-    var config = __webpack_require__(/*! /home/fouzia/Documents/Thesis/msvis.json */ "../../../../Documents/Thesis/msvis.json");
-
-    console.log(config);
-    var grafana_url = config['grafana_url'];
-    var api_key = config['api_key_admin'];
-    var ms_status_query = config['services_status_query_prometheus'];
-    var ms_resTime_query = config['services_responseTime_query_prometheus'];
-    var ms_load1m_query = config['services_responseTime_query_prometheus'];
-    App.service_name = config['erviceName_col_name'];
-    App.closed_bugs = config['closed_bugs_count_col_name'];
-    App.open_bugs = config['open_bugs_count_col_name'];
-    App.closed_issues = config['closed_issues_count_col_name'];
-    App.open_issues = config['open_issues_count_col_name'];
-    App.revenue = config['services_revenue_col_name'];
-    App.cost = config['services_cost_col_name'];
-    App.effort = config['services_effort_col_name'];
-    App.show_bugs = config['show_bugs_ratio'];
-    App.show_issues = config['show_issues_ratio'];
-    App.show_costRevenue = config['show_costToRevenue_ratio'];
-    App.show_effort = config['show_relative_effort'];
-    console.log(App.show_effort);
-    this.mergeMetricsData(grafana_url, api_key, ms_status_query, ms_resTime_query, ms_load1m_query);
+    this.readConfiguration();
+    this.mergeMetricsData();
   };
 
   App.prototype.render = function () {
     var legend_style = {
-      cssFloat: 'left'
+      "width": "300px",
+      'height': '150px',
+      'padding-top': '5px',
+      'position': 'absolute'
     };
     var mynetwork_style = {
-      "height": "150px",
-      "width": "200px",
-      cssFloat: 'right'
-    }; //var mynetwork_style = { float:'left', border-style:'solid', height:'150px', width:'200px' } as React.CSSProperties;
+      "width": "1400px",
+      'height': '750px',
+      border: 'solid',
+      'border-width': '0.25px',
+      'border-color': 'grey',
+      'padding': '5px 5px 5px 5px',
+      'overflow': 'scroll'
+    }; //var mynetwork_style = { float:'left', border: 'solid', 'padding-top': '5px', 'overflow': 'scroll' } as React.CSSProperties;
 
-    /*	var legend_style = {
-         splitterStyle: {
-             height: 150px,
-             width: 200px,
-             float: right
-         }
-    };*/
+    return (//working blocks below
 
-    return (
-      /*<div style="height:700px;width:600px">
-        <p>Microservices Call Dependency Graph</p>
-        <div id = "mynetwork" className="Graph"></div>
-      </div>*/
+      /*
+            <div id="mynetwork" className="Graph" style={legend_style}>
+              <p>Microservices Call Dependency Graph</p>
+              <div style={mynetwork_style}><svg id="graph_legend" ></svg></div>
+            </div>
+      */
       react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         id: "mynetwork",
-        className: "Graph",
-        style: legend_style
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", null, "Microservices Call Dependency Graph"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         style: mynetwork_style
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("svg", {
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", {
+        style: legend_style
+      }, "Microservices Call Dependency Graph", react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("svg", {
         id: "graph_legend"
       })))
     );
