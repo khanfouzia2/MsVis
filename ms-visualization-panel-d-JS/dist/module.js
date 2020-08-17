@@ -9818,7 +9818,6 @@ function (_super) {
             url = App.grafana_url + '/api/datasources/name/' + datasource_name;
             api_token = "Bearer " + App.api_key;
             console.log(url);
-            console.log(api_token);
             headers = {
               'Accept': 'application/json',
               'Content-Type': 'application/json',

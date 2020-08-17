@@ -13,8 +13,8 @@
 	"services_revenue_col_name": "revenue",
 	"services_cost_col_name": "cost",
 	"services_effort_col_name": "effort",
-	"show_bugs_ratio": 0,
-	"show_issues_ratio": 0,
+	"show_bugs_ratio": 1,
+	"show_issues_ratio": 1,
 	"show_costToRevenue_ratio": 1,
 	"show_relative_effort": 1
 }
