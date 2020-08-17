@@ -373,7 +373,6 @@ export class App extends PureComponent<Props> {
 		//const api_token = "Bearer eyJrIjoiQU1pMzFaZXlTd0VsbkkwcGhTRnpGcnY3ZGNpb2JOdmEiLCJuIjoibXN2aXNLZXkiLCJpZCI6MX0=";
 		const api_token = "Bearer "+ App.api_key;
 		console.log(url);
-		console.log(api_token);
 
 		//below one either for server or windows. most probably server?
 		//const api_token = "Bearer eyJrIjoiTTBIRkRvb01lWmt5NnlCZmZ2SkhCNk14bk1JQ3RzVjIiLCJuIjoiZHNLZXkiLCJpZCI6MX0=";
