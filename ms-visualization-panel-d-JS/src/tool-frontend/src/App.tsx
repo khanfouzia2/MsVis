@@ -19,6 +19,7 @@ export class App extends PureComponent<Props> {
 	static ms_status_query: string;
 	static ms_resTime_query: string;
 	static ms_load1m_query: string;
+	static db_table: string;
 	static service_name: string;
 	static closed_bugs: number;
 	static open_bugs: number;
@@ -460,7 +461,7 @@ export class App extends PureComponent<Props> {
 		//const request_payload = {"from":"1591257698882","to":"1591279298882","queries":[{"refId":"A","intervalMs":60000,"maxDataPoints":466,"datasourceId":86,"rawSql":"SELECT\n  closed_bugs_count AS \"closed_bugs\",\n  open_bugs_count AS \"open_bugs\",\n  closed_issues_count AS \"closed_issues\",\n  open_issues_count AS \"open_issues\",\n  revenue AS \"revenue\",\n  cost AS \"cost\",\n  effort AS \"effort\",\n  service_name AS \"service_name\"\nFROM metrics\nORDER BY service_name","format":"table"}]};
 		const datasource_name = "MySQL";
 		const datasourceId = await this.getDatasourceId(datasource_name);
-		const request_payload = {"from":"1591257698882","to":"1591279298882","queries":[{"refId":"A","intervalMs":60000,"maxDataPoints":466,"datasourceId":datasourceId.id,"rawSql":"SELECT\n  service_name AS \"service_name\",\n  closed_bugs_count AS \"closed_bugs\",\n  open_bugs_count AS \"open_bugs\",\n  closed_issues_count AS \"closed_issues\",\n  open_issues_count AS \"open_issues\",\n  revenue AS \"revenue\",\n  cost AS \"cost\",\n  effort AS \"effort\"\nFROM metrics\nORDER BY service_name\n","format":"table"}]};
+		const request_payload = {"from":"1591257698882","to":"1591279298882","queries":[{"refId":"A","intervalMs":60000,"maxDataPoints":466,"datasourceId":datasourceId.id,"rawSql":"SELECT\n  " + App.service_name+ " AS \"service_name\",\n  " + App.closed_bugs + " AS \"closed_bugs\",\n  " + App.open_bugs + " AS \"open_bugs\",\n  " + App.closed_issues + " AS \"closed_issues\",\n  " + App.open_issues + " AS \"open_issues\",\n  " + App.revenue + " AS \"revenue\",\n  " + App.cost + " AS \"cost\",\n  " + App.effort + " AS \"effort\"\nFROM " + App.db_table + "\nORDER BY " + App.service_name + "\n","format":"table"}]};
 		
 		const res = await fetch(url, {
 		  method: "POST",
@@ -514,6 +515,7 @@ export class App extends PureComponent<Props> {
 		App.ms_status_query = config['services_status_query_prometheus'];
 		App.ms_resTime_query = config['services_responseTime_query_prometheus'];
 		App.ms_load1m_query = config['services_responseTime_query_prometheus'];
+		App.db_table = config['mysql_db_table_name'];
 		App.service_name = config['erviceName_col_name'];
 		App.closed_bugs = config['closed_bugs_count_col_name'];
 		App.open_bugs = config['open_bugs_count_col_name'];

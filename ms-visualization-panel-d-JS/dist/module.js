@@ -90,10 +90,10 @@ define(["@grafana/data","@grafana/ui","react"], function(__WEBPACK_EXTERNAL_MODU
 /*!************************************************!*\
   !*** /home/fouzia/Documents/Thesis/msvis.json ***!
   \************************************************/
-/*! exports provided: grafana_url, api_key_admin, services_status_query_prometheus, services_responseTime_query_prometheus, services_LoadPerMin_query_prometheus, erviceName_col_name, closed_bugs_count_col_name, open_bugs_count_col_name, closed_issues_count_col_name, open_issues_count_col_name, services_revenue_col_name, services_cost_col_name, services_effort_col_name, show_bugs_ratio, show_issues_ratio, show_costToRevenue_ratio, show_relative_effort, default */
+/*! exports provided: grafana_url, api_key_admin, services_status_query_prometheus, services_responseTime_query_prometheus, services_LoadPerMin_query_prometheus, mysql_db_table_name, erviceName_col_name, closed_bugs_count_col_name, open_bugs_count_col_name, closed_issues_count_col_name, open_issues_count_col_name, services_revenue_col_name, services_cost_col_name, services_effort_col_name, show_bugs_ratio, show_issues_ratio, show_costToRevenue_ratio, show_relative_effort, default */
 /***/ (function(module) {
 
-module.exports = {"grafana_url":"http://localhost:3000","api_key_admin":"eyJrIjoiQU1pMzFaZXlTd0VsbkkwcGhTRnpGcnY3ZGNpb2JOdmEiLCJuIjoibXN2aXNLZXkiLCJpZCI6MX0=","services_status_query_prometheus":"up{job!='prometheus'}","services_responseTime_query_prometheus":"scrape_duration_seconds{job!='prometheus'}","services_LoadPerMin_query_prometheus":"scrape_samples_scraped{job!='prometheus'}","erviceName_col_name":"service_name","closed_bugs_count_col_name":"closed_bugs_count","open_bugs_count_col_name":"open_bugs_count","closed_issues_count_col_name":"closed_issues_count","open_issues_count_col_name":"open_issues_count","services_revenue_col_name":"revenue","services_cost_col_name":"cost","services_effort_col_name":"effort","show_bugs_ratio":1,"show_issues_ratio":1,"show_costToRevenue_ratio":1,"show_relative_effort":1};
+module.exports = {"grafana_url":"http://localhost:3000","api_key_admin":"eyJrIjoiQU1pMzFaZXlTd0VsbkkwcGhTRnpGcnY3ZGNpb2JOdmEiLCJuIjoibXN2aXNLZXkiLCJpZCI6MX0=","services_status_query_prometheus":"up{job!='prometheus'}","services_responseTime_query_prometheus":"scrape_duration_seconds{job!='prometheus'}","services_LoadPerMin_query_prometheus":"scrape_samples_scraped{job!='prometheus'}","mysql_db_table_name":"metrics","erviceName_col_name":"service_name","closed_bugs_count_col_name":"closed_bugs_count","open_bugs_count_col_name":"open_bugs_count","closed_issues_count_col_name":"closed_issues_count","open_issues_count_col_name":"open_issues_count","services_revenue_col_name":"revenue","services_cost_col_name":"cost","services_effort_col_name":"effort","show_bugs_ratio":0,"show_issues_ratio":0,"show_costToRevenue_ratio":1,"show_relative_effort":1};
 
 /***/ }),
 
@@ -9985,7 +9985,7 @@ function (_super) {
                 "intervalMs": 60000,
                 "maxDataPoints": 466,
                 "datasourceId": datasourceId.id,
-                "rawSql": "SELECT\n  service_name AS \"service_name\",\n  closed_bugs_count AS \"closed_bugs\",\n  open_bugs_count AS \"open_bugs\",\n  closed_issues_count AS \"closed_issues\",\n  open_issues_count AS \"open_issues\",\n  revenue AS \"revenue\",\n  cost AS \"cost\",\n  effort AS \"effort\"\nFROM metrics\nORDER BY service_name\n",
+                "rawSql": "SELECT\n  " + App.service_name + " AS \"service_name\",\n  " + App.closed_bugs + " AS \"closed_bugs\",\n  " + App.open_bugs + " AS \"open_bugs\",\n  " + App.closed_issues + " AS \"closed_issues\",\n  " + App.open_issues + " AS \"open_issues\",\n  " + App.revenue + " AS \"revenue\",\n  " + App.cost + " AS \"cost\",\n  " + App.effort + " AS \"effort\"\nFROM " + App.db_table + "\nORDER BY " + App.service_name + "\n",
                 "format": "table"
               }]
             };
@@ -10064,6 +10064,7 @@ function (_super) {
         App.ms_status_query = config['services_status_query_prometheus'];
         App.ms_resTime_query = config['services_responseTime_query_prometheus'];
         App.ms_load1m_query = config['services_responseTime_query_prometheus'];
+        App.db_table = config['mysql_db_table_name'];
         App.service_name = config['erviceName_col_name'];
         App.closed_bugs = config['closed_bugs_count_col_name'];
         App.open_bugs = config['open_bugs_count_col_name'];

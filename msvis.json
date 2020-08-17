@@ -1,0 +1,20 @@
+{
+	"grafana_url": "http://localhost:3000",
+	"api_key_admin": "eyJrIjoiQU1pMzFaZXlTd0VsbkkwcGhTRnpGcnY3ZGNpb2JOdmEiLCJuIjoibXN2aXNLZXkiLCJpZCI6MX0=",
+	"services_status_query_prometheus": "up{job!='prometheus'}",
+	"services_responseTime_query_prometheus": "scrape_duration_seconds{job!='prometheus'}",
+	"services_LoadPerMin_query_prometheus": "scrape_samples_scraped{job!='prometheus'}",
+	"mysql_db_table_name": "metrics",
+	"erviceName_col_name": "service_name",
+	"closed_bugs_count_col_name": "closed_bugs_count",
+	"open_bugs_count_col_name": "open_bugs_count",
+	"closed_issues_count_col_name": "closed_issues_count",
+	"open_issues_count_col_name": "open_issues_count",
+	"services_revenue_col_name": "revenue",
+	"services_cost_col_name": "cost",
+	"services_effort_col_name": "effort",
+	"show_bugs_ratio": 0,
+	"show_issues_ratio": 0,
+	"show_costToRevenue_ratio": 1,
+	"show_relative_effort": 1
+}
