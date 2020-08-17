@@ -510,7 +510,7 @@ export class App extends PureComponent<Props> {
 		};*/
 
 		//var config = require('/home/fouzia/Documents/Thesis/msvis.json');
-		var config = require('/etc/grafana/msvis.json');
+		var config = require('/home/msvis.json');
 		console.log(config);
 		App.grafana_url = config['grafana_url'];
 		App.api_key = config['api_key_admin'];
