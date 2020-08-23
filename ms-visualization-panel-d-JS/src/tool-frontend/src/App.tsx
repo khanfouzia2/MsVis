@@ -7,7 +7,6 @@ import { PanelProps } from '@grafana/data';
 import { getNetworkData } from './FormNetwork';
 //import fs from 'fs';
 
-//import fs from 'fs';
 //import axios from 'axios';
 
 
@@ -513,13 +512,6 @@ export class App extends PureComponent<Props> {
 			show_costRevenue: number;
 			//show_effort: number;
 		};*/
-		
-  
-		var fs = require('fs');
-
-		var text = fs.readFileSync('/home/msvis.json', 'utf8');
-var textByLine = text.split("\n");
-console.log(textByLine);
 
 
 		//var config = require('/home/fouzia/Documents/Thesis/msvis.json');
@@ -527,7 +519,7 @@ console.log(textByLine);
 		//console.log("fres");
 	
 
-		var config = require('/home/fouzia/MsVis-Repo/MsVis/ms-visualization-panel-d-JS/msvis.json');
+		var config = require('/etc/grafana/msvis.json');
 		console.log(config);
 
 		App.grafana_url = config['grafana_url'];
@@ -621,7 +613,7 @@ console.log(textByLine);
 		//this.sortSQLData();
 		//this.getPrometheusMetrics();
 		//this.readConfiguration();
-		await this.readTextFile('http://localhost:8000/msvis.json');
+		this.readConfiguration();
 		this.mergeMetricsData();
 	}
 	
