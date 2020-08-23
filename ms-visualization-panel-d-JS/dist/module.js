@@ -86,14 +86,25 @@ define(["@grafana/data","@grafana/ui","react"], function(__WEBPACK_EXTERNAL_MODU
 /************************************************************************/
 /******/ ({
 
-/***/ "../../../../../msvis.json":
-/*!************************!*\
-  !*** /home/msvis.json ***!
-  \************************/
+/***/ "../msvis.json":
+/*!*********************!*\
+  !*** ../msvis.json ***!
+  \*********************/
 /*! exports provided: grafana_url, api_key_admin, services_status_query_prometheus, services_responseTime_query_prometheus, services_LoadPerMin_query_prometheus, mysql_db_table_name, erviceName_col_name, closed_bugs_count_col_name, open_bugs_count_col_name, closed_issues_count_col_name, open_issues_count_col_name, services_revenue_col_name, services_cost_col_name, services_effort_col_name, show_bugs_ratio, show_issues_ratio, show_costToRevenue_ratio, show_relative_effort, default */
 /***/ (function(module) {
 
-module.exports = {"grafana_url":"http://localhost:3000","api_key_admin":"eyJrIjoiQU1pMzFaZXlTd0VsbkkwcGhTRnpGcnY3ZGNpb2JOdmEiLCJuIjoibXN2aXNLZXkiLCJpZCI6MX0=","services_status_query_prometheus":"up{job!='prometheus'}","services_responseTime_query_prometheus":"scrape_duration_seconds{job!='prometheus'}","services_LoadPerMin_query_prometheus":"scrape_samples_scraped{job!='prometheus'}","mysql_db_table_name":"metrics","erviceName_col_name":"service_name","closed_bugs_count_col_name":"closed_bugs_count","open_bugs_count_col_name":"open_bugs_count","closed_issues_count_col_name":"closed_issues_count","open_issues_count_col_name":"open_issues_count","services_revenue_col_name":"revenue","services_cost_col_name":"cost","services_effort_col_name":"effort","show_bugs_ratio":1,"show_issues_ratio":1,"show_costToRevenue_ratio":1,"show_relative_effort":1};
+module.exports = {"grafana_url":"http://localhost:3000","api_key_admin":"eyJrIjoiQU1pMzFaZXlTd0VsbkkwcGhTRnpGcnY3ZGNpb2JOdmEiLCJuIjoibXN2aXNLZXkiLCJpZCI6MX0=","services_status_query_prometheus":"up{job!='prometheus'}","services_responseTime_query_prometheus":"scrape_duration_seconds{job!='prometheus'}","services_LoadPerMin_query_prometheus":"scrape_samples_scraped{job!='prometheus'}","mysql_db_table_name":"metrics","erviceName_col_name":"service_name","closed_bugs_count_col_name":"closed_bugs_count","open_bugs_count_col_name":"open_bugs_count","closed_issues_count_col_name":"closed_issues_count","open_issues_count_col_name":"open_issues_count","services_revenue_col_name":"revenue","services_cost_col_name":"cost","services_effort_col_name":"effort","show_bugs_ratio":1,"show_issues_ratio":1,"show_costToRevenue_ratio":0,"show_relative_effort":1};
+
+/***/ }),
+
+/***/ "../node_modules/node-libs-browser/mock/empty.js":
+/*!*******************************************************!*\
+  !*** ../node_modules/node-libs-browser/mock/empty.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
 
 /***/ }),
 
@@ -9529,11 +9540,14 @@ function (_super) {
             if (!(data.series.length < 1)) return [3
             /*break*/
             , 1];
+            console.log("No data received from Jaeger server.");
             return [3
             /*break*/
             , 5];
 
           case 1:
+            console.log("testttttttttt");
+            console.log(App.grafana_url);
             return [4
             /*yield*/
             , this.getPrometheusMetrics()];
@@ -10056,9 +10070,13 @@ function (_super) {
 
   App.prototype.readConfiguration = function () {
     return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
-      var config;
+      var fs, text, textByLine, config;
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
-        config = __webpack_require__(/*! /home/msvis.json */ "../../../../../msvis.json");
+        fs = __webpack_require__(/*! fs */ "../node_modules/node-libs-browser/mock/empty.js");
+        text = fs.readFileSync('/home/msvis.json', 'utf8');
+        textByLine = text.split("\n");
+        console.log(textByLine);
+        config = __webpack_require__(/*! ../msvis.json */ "../msvis.json");
         console.log(config);
         App.grafana_url = config['grafana_url'];
         App.api_key = config['api_key_admin'];
@@ -10086,11 +10104,70 @@ function (_super) {
     });
   };
 
+  App.prototype.readTextFile = function (url) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+      var config;
+      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            return [4
+            /*yield*/
+            , this.runPrometheusQuery(url)];
+
+          case 1:
+            config = _a.sent();
+            App.grafana_url = config['grafana_url'];
+            App.api_key = config['api_key_admin'];
+            App.ms_status_query = config['services_status_query_prometheus'];
+            App.ms_resTime_query = config['services_responseTime_query_prometheus'];
+            App.ms_load1m_query = config['services_responseTime_query_prometheus'];
+            App.db_table = config['mysql_db_table_name'];
+            App.service_name = config['erviceName_col_name'];
+            App.closed_bugs = config['closed_bugs_count_col_name'];
+            App.open_bugs = config['open_bugs_count_col_name'];
+            App.closed_issues = config['closed_issues_count_col_name'];
+            App.open_issues = config['open_issues_count_col_name'];
+            App.revenue = config['services_revenue_col_name'];
+            App.cost = config['services_cost_col_name'];
+            App.effort = config['services_effort_col_name'];
+            App.show_bugs = config['show_bugs_ratio'];
+            App.show_issues = config['show_issues_ratio'];
+            App.show_costRevenue = config['show_costToRevenue_ratio'];
+            App.show_effort = config['show_relative_effort'];
+            console.log(App.grafana_url);
+            return [2
+            /*return*/
+            ];
+        }
+      });
+    });
+  };
+
   App.prototype.componentDidMount = function () {
-    //this.sortSQLData();
-    //this.getPrometheusMetrics();
-    this.readConfiguration();
-    this.mergeMetricsData();
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            //this.sortSQLData();
+            //this.getPrometheusMetrics();
+            //this.readConfiguration();
+            return [4
+            /*yield*/
+            , this.readTextFile('http://localhost:8000/msvis.json')];
+
+          case 1:
+            //this.sortSQLData();
+            //this.getPrometheusMetrics();
+            //this.readConfiguration();
+            _a.sent();
+
+            this.mergeMetricsData();
+            return [2
+            /*return*/
+            ];
+        }
+      });
+    });
   };
 
   App.prototype.render = function () {

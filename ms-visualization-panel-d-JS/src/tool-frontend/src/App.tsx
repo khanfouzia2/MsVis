@@ -5,7 +5,9 @@ import { SimpleOptions } from 'types';
 //import './App.css';
 import { PanelProps } from '@grafana/data';
 import { getNetworkData } from './FormNetwork';
+//import fs from 'fs';
 
+//import fs from 'fs';
 //import axios from 'axios';
 
 
@@ -41,9 +43,11 @@ export class App extends PureComponent<Props> {
 		const { data } = this.props;
 		console.log(data.series);
 		if (data.series.length < 1) {
-
+			console.log("No data received from Jaeger server.");
 		}
 		else {
+			console.log("testttttttttt");
+			console.log(App.grafana_url);
 			const prometheus_metrics = await this.getPrometheusMetrics();
 			console.log("Prometheus metrics_data inside drawGraph");
 			console.log(prometheus_metrics);
@@ -492,6 +496,7 @@ export class App extends PureComponent<Props> {
 			return [];
 	}
 
+
 	async readConfiguration() {
 		/*const metricsData = (window as any).__INITIAL_DATA__;
 		type metricsData = {
@@ -508,10 +513,23 @@ export class App extends PureComponent<Props> {
 			show_costRevenue: number;
 			//show_effort: number;
 		};*/
+		
+  
+		var fs = require('fs');
+
+		var text = fs.readFileSync('/home/msvis.json', 'utf8');
+var textByLine = text.split("\n");
+console.log(textByLine);
+
 
 		//var config = require('/home/fouzia/Documents/Thesis/msvis.json');
-		var config = require('/home/msvis.json');
+		//const fres = await this.getFileData('file:///home/fouzia/Documents/Thesis/msvis.json');
+		//console.log("fres");
+	
+
+		var config = require('/home/fouzia/MsVis-Repo/MsVis/ms-visualization-panel-d-JS/msvis.json');
 		console.log(config);
+
 		App.grafana_url = config['grafana_url'];
 		App.api_key = config['api_key_admin'];
 		App.ms_status_query = config['services_status_query_prometheus'];
@@ -533,10 +551,77 @@ export class App extends PureComponent<Props> {
 		console.log(App.show_effort);
 	}
 
-	componentDidMount () {
+	async readTextFile(url:string)
+	{
+
+		const config = await this.runPrometheusQuery(url);
+		App.grafana_url = config['grafana_url'];
+		App.api_key = config['api_key_admin'];
+		App.ms_status_query = config['services_status_query_prometheus'];
+		App.ms_resTime_query = config['services_responseTime_query_prometheus'];
+		App.ms_load1m_query = config['services_responseTime_query_prometheus'];
+		App.db_table = config['mysql_db_table_name'];
+		App.service_name = config['erviceName_col_name'];
+		App.closed_bugs = config['closed_bugs_count_col_name'];
+		App.open_bugs = config['open_bugs_count_col_name'];
+		App.closed_issues = config['closed_issues_count_col_name'];
+		App.open_issues = config['open_issues_count_col_name'];
+		App.revenue = config['services_revenue_col_name'];
+		App.cost = config['services_cost_col_name'];
+		App.effort = config['services_effort_col_name'];
+		App.show_bugs = config['show_bugs_ratio'];
+		App.show_issues =config['show_issues_ratio'];
+		App.show_costRevenue = config['show_costToRevenue_ratio'];
+		App.show_effort = config['show_relative_effort'];
+		console.log(App.grafana_url);
+
+
+	    /*var configFile = new XMLHttpRequest();
+	    configFile.open("GET", url, true);
+	    configFile.onreadystatechange = function ()
+	    {
+		if(configFile.readyState === 4)
+		{
+		    if(configFile.status === 200 || configFile.status == 0)
+		    {
+		        var config_obj = configFile.responseText;
+			//var CONFIG = require('./msvis.json');
+			console.log(config_obj);
+			let config:string = (JSON.parse(config_obj));
+		App.grafana_url = config['grafana_url'];
+		App.api_key = config['api_key_admin'];
+		App.ms_status_query = config['services_status_query_prometheus'];
+		App.ms_resTime_query = config['services_responseTime_query_prometheus'];
+		App.ms_load1m_query = config['services_responseTime_query_prometheus'];
+		App.db_table = config['mysql_db_table_name'];
+		App.service_name = config['erviceName_col_name'];
+		App.closed_bugs = config['closed_bugs_count_col_name'];
+		App.open_bugs = config['open_bugs_count_col_name'];
+		App.closed_issues = config['closed_issues_count_col_name'];
+		App.open_issues = config['open_issues_count_col_name'];
+		App.revenue = config['services_revenue_col_name'];
+		App.cost = config['services_cost_col_name'];
+		App.effort = config['services_effort_col_name'];
+		App.show_bugs = config['show_bugs_ratio'];
+		App.show_issues =config['show_issues_ratio'];
+		App.show_costRevenue = config['show_costToRevenue_ratio'];
+		App.show_effort = config['show_relative_effort'];
+		console.log(App.grafana_url);
+		        
+		    }
+			else console.log("unable to read config file, resource was not fetched.");
+		}
+		else console.log("Read config file operation failed");
+	    }
+	    configFile.send(null);
+	    */
+	}
+
+	async componentDidMount () {
 		//this.sortSQLData();
 		//this.getPrometheusMetrics();
-		this.readConfiguration();
+		//this.readConfiguration();
+		await this.readTextFile('http://localhost:8000/msvis.json');
 		this.mergeMetricsData();
 	}
 	
