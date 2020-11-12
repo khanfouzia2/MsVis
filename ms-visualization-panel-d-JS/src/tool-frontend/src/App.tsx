@@ -286,6 +286,7 @@ export class App extends PureComponent<Props> {
 			  .attr("stroke", "#CCCC00")
 			  .attr("d", (function(d:any,i:any) { return arc3({startAngle:0, endAngle:(Math.PI)*d.effort_spent}); }))
 		}
+
 		
 		if (App.show_bugs) {  
 		node.append("path")
@@ -293,6 +294,13 @@ export class App extends PureComponent<Props> {
 		  .attr("stroke-width", 3)
 		  .attr("stroke", "red")
 		  .attr("d", (function(d:any,i:any) { return arc2({startAngle:0, endAngle:(Math.PI)*d.open_to_closed_bugs}); }))
+		}
+		if (App.show_bugs) {  
+		node.append("path")
+		  .attr("fill", "none")
+		  .attr("stroke-width", 3)
+		  .attr("stroke", "grey")
+		  .attr("d", (function(d:any,i:any) { return arc2({startAngle:(Math.PI)*d.open_to_closed_bugs, endAngle:(Math.PI)*2}); }))
 		}
 
 
@@ -303,6 +311,14 @@ export class App extends PureComponent<Props> {
 		  .attr("stroke", "blue")
 		  .attr("d", (function(d:any,i:any) { return arc4({startAngle:0, endAngle:(Math.PI)*d.cost_to_revenue}); }))
 		}
+		if (App.show_costRevenue) { 
+		node.append("path")
+		  .attr("fill", "none")
+		  .attr("stroke-width", 3)
+		  .attr("stroke", "grey")
+		  .attr("d", (function(d:any,i:any) { return arc4({startAngle:(Math.PI)*d.cost_to_revenue, endAngle:(Math.PI)*2}); }))
+		}
+
 
 		if (App.show_issues) { 
 		node.append("path")
@@ -310,6 +326,13 @@ export class App extends PureComponent<Props> {
 		  .attr("stroke-width", 3)
 		  .attr("stroke", "brown")
 		  .attr("d", (function(d:any,i:any) { return arc({startAngle:0, endAngle:(Math.PI)*d.open_to_closed_issues}); }))
+		}
+		if (App.show_issues) { 
+		node.append("path")
+		  .attr("fill", "none")
+		  .attr("stroke-width", 3)
+		  .attr("stroke", "grey")
+		  .attr("d", (function(d:any,i:any) { return arc({startAngle:(Math.PI)*d.open_to_closed_issues, endAngle:(Math.PI)*2}); }))
 		}
 
 		// add the text

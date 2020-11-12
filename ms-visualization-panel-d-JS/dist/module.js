@@ -9757,6 +9757,15 @@ function (_super) {
           });
         }
 
+        if (App.show_bugs) {
+          node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "grey").attr("d", function (d, i) {
+            return arc2({
+              startAngle: Math.PI * d.open_to_closed_bugs,
+              endAngle: Math.PI * 2
+            });
+          });
+        }
+
         if (App.show_costRevenue) {
           node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "blue").attr("d", function (d, i) {
             return arc4({
@@ -9766,11 +9775,29 @@ function (_super) {
           });
         }
 
+        if (App.show_costRevenue) {
+          node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "grey").attr("d", function (d, i) {
+            return arc4({
+              startAngle: Math.PI * d.cost_to_revenue,
+              endAngle: Math.PI * 2
+            });
+          });
+        }
+
         if (App.show_issues) {
           node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "brown").attr("d", function (d, i) {
             return arc({
               startAngle: 0,
               endAngle: Math.PI * d.open_to_closed_issues
+            });
+          });
+        }
+
+        if (App.show_issues) {
+          node.append("path").attr("fill", "none").attr("stroke-width", 3).attr("stroke", "grey").attr("d", function (d, i) {
+            return arc({
+              startAngle: Math.PI * d.open_to_closed_issues,
+              endAngle: Math.PI * 2
             });
           });
         } // add the text
