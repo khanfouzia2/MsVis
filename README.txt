@@ -1,3 +1,7 @@
+Link to thesis: http://urn.fi/URN:NBN:fi:tuni-202011157967
+
+#####Instructions To Run The Tool And How To Get Started######
+
 In order to run MsVis tool, please run the following instructions after cloning the repo to your server.
 
 Install Grafana.
